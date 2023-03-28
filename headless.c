@@ -18,6 +18,7 @@
 #include <stdlib.h>
 
 #include "wtime.h"
+#include <string.h> // Para usar strcat
 
 /* macros */
 
@@ -38,6 +39,8 @@ static float force, source;
 
 static float *u, *v, *u_prev, *v_prev;
 static float *dens, *dens_prev;
+
+FILE *fptr; 
 
 
 /*
@@ -154,6 +157,12 @@ static void one_step(void)
         printf("%lf, %lf, %lf, %lf: ns per cell total, react, vel_step, dens_step\n",
                (react_ns_p_cell + vel_ns_p_cell + dens_ns_p_cell) / times,
                react_ns_p_cell / times, vel_ns_p_cell / times, dens_ns_p_cell / times);
+               
+        fprintf(fptr,"%lf, %lf, %lf, %lf: ns per cell total, react, vel_step, dens_step\n",
+               (react_ns_p_cell + vel_ns_p_cell + dens_ns_p_cell) / times,
+               react_ns_p_cell / times, vel_ns_p_cell / times, dens_ns_p_cell / times);
+
+        
         one_second = wtime();
         react_ns_p_cell = 0.0;
         vel_ns_p_cell = 0.0;
@@ -209,9 +218,13 @@ int main(int argc, char** argv)
         exit(1);
     }
     clear_data();
+    
+
+	fptr=fopen(strcat(argv[0],".dat"),"a");	//Abro un archivo de datos
     for (i = 0; i < 2048; i++) {
         one_step();
     }
+	fclose(fptr);
     free_data();
 
     exit(0);
