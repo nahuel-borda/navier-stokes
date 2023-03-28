@@ -17,7 +17,7 @@ Nruns=12 # Cantidad de ejecuciones para hacer los promedios de los ns_per_cell
 
 
 for i in "gcc" ; do 
-	for j in "-O0" "-O1" "-O2" "-O3" "-Ofast"; do
+	for j in "-O0" "-O1" "-O2" "-O3" "-Ofast" "-Os" "-Oz"; do
 		
 		#Exporto los nombres de los compiladores y las opciones
 		export CC=$i

@@ -26,8 +26,8 @@ static void set_bnd(unsigned int n, boundary b, float* x)
 {
     for (unsigned int i = 1; i <= n; i++) {
 	    // Estas expresiones son de la forma   variable = (condition) ? Expression2 : Expression3
-	    // Son para poner las condiciones de contorno.
-        x[IX(0, i)] = b == VERTICAL ? -x[IX(1, i)] : x[IX(1, i)];	//TODO si esto es vertical, esto significa que el segundo índice es de la componente horizontal??
+	    // Son para poner las condiciones de contorno. Ver grafico en la carpeta.
+        x[IX(0, i)] = b == VERTICAL ? -x[IX(1, i)] : x[IX(1, i)];
         x[IX(n + 1, i)] = b == VERTICAL ? -x[IX(n, i)] : x[IX(n, i)];
         x[IX(i, 0)] = b == HORIZONTAL ? -x[IX(i, 1)] : x[IX(i, 1)];
         x[IX(i, n + 1)] = b == HORIZONTAL ? -x[IX(i, n)] : x[IX(i, n)];
@@ -110,8 +110,8 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div)
             v[IX(i, j)] -= 0.5f * n * (p[IX(i, j + 1)] - p[IX(i, j - 1)]);
         }
     }
-    set_bnd(n, VERTICAL, u);     //acá está poniendo que las filas de los bordes de u son 0, es decir que u=v_y //TODO esto lo debo estar entendiendo mal! En la línea 30, asumi que en el par (i,j) i corresponde a x, j a y. Pero esto depende de como se grafiquen las cosas en demo, no?
-    set_bnd(n, HORIZONTAL, v);   //acá está poniendo que las columnas de los bordes de v son 0, es decir que v=v_x
+    set_bnd(n, VERTICAL, u);     //Pone las condiciones de contorno de fluido viscoso.
+    set_bnd(n, HORIZONTAL, v);   
 }
 
 void dens_step(unsigned int n, float* x, float* x0, float* u, float* v, float diff, float dt)
