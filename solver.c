@@ -25,12 +25,15 @@ static void add_source(unsigned int n, float* x, const float* s, float dt)
 static void set_bnd(unsigned int n, boundary b, float* x)
 {
     for (unsigned int i = 1; i <= n; i++) {
-        x[IX(0, i)] = b == VERTICAL ? -x[IX(1, i)] : x[IX(1, i)];
+	    // Estas expresiones son de la forma   variable = (condition) ? Expression2 : Expression3
+	    // Son para poner las condiciones de contorno.
+        x[IX(0, i)] = b == VERTICAL ? -x[IX(1, i)] : x[IX(1, i)];	//TODO si esto es vertical, esto significa que el segundo índice es de la componente horizontal??
         x[IX(n + 1, i)] = b == VERTICAL ? -x[IX(n, i)] : x[IX(n, i)];
         x[IX(i, 0)] = b == HORIZONTAL ? -x[IX(i, 1)] : x[IX(i, 1)];
         x[IX(i, n + 1)] = b == HORIZONTAL ? -x[IX(i, n)] : x[IX(i, n)];
     }
-    x[IX(0, 0)] = 0.5f * (x[IX(1, 0)] + x[IX(0, 1)]);
+    // En las esquinas promedian las celdas adyacentes.
+    x[IX(0, 0)] = 0.5f * (x[IX(1, 0)] + x[IX(0, 1)]); 
     x[IX(0, n + 1)] = 0.5f * (x[IX(1, n + 1)] + x[IX(0, n)]);
     x[IX(n + 1, 0)] = 0.5f * (x[IX(n, 0)] + x[IX(n + 1, 1)]);
     x[IX(n + 1, n + 1)] = 0.5f * (x[IX(n, n + 1)] + x[IX(n + 1, n)]);
@@ -62,7 +65,7 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
     float dt0 = dt * n;
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
-            x = i - dt0 * u[IX(i, j)];
+            x = i - dt0 * u[IX(i, j)];	//de acá pareciera que u=v_x, y que v=v_y. Está mal el comentario de linea 113??
             y = j - dt0 * v[IX(i, j)];
             if (x < 0.5f) {
                 x = 0.5f;
@@ -107,8 +110,8 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div)
             v[IX(i, j)] -= 0.5f * n * (p[IX(i, j + 1)] - p[IX(i, j - 1)]);
         }
     }
-    set_bnd(n, VERTICAL, u);
-    set_bnd(n, HORIZONTAL, v);
+    set_bnd(n, VERTICAL, u);     //acá está poniendo que las filas de los bordes de u son 0, es decir que u=v_y //TODO esto lo debo estar entendiendo mal! En la línea 30, asumi que en el par (i,j) i corresponde a x, j a y. Pero esto depende de como se grafiquen las cosas en demo, no?
+    set_bnd(n, HORIZONTAL, v);   //acá está poniendo que las columnas de los bordes de v son 0, es decir que v=v_x
 }
 
 void dens_step(unsigned int n, float* x, float* x0, float* u, float* v, float diff, float dt)

@@ -207,7 +207,7 @@ static void react(float* d, float* u, float* v)
 
     if (max_velocity2 < 0.0000005f) {
         u[IX(N / 2, N / 2)] = force * 10.0f;
-        v[IX(N / 2, N / 2)] = force * 10.0f;
+        v[IX(N / 2, N / 2)] = force * 10.0f; // de acá no queda duda de que v=v_y
     }
     if (max_density < 1.0f) {
         d[IX(N / 2, N / 2)] = source * 10.0f;
