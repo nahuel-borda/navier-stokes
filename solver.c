@@ -43,10 +43,12 @@ static void set_bnd(unsigned int n, boundary b, float* x)
 
 static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float a, float uoc)
 {
-	static float x_aux=0.0f;	
+	float x_aux;
+    float err2;	
+    
     for (unsigned int k = 0; k < 20; k++) {
 		
-        float err2=0.0f;
+        err2=0.0f;
         for (unsigned int i = 1; i <= n; i++) {
             for (unsigned int j = 1; j <= n; j++) {
 	            x_aux=x[IX(i, j)]; //guardo el valor anterior
@@ -56,16 +58,14 @@ static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, c
         }
         set_bnd(n, b, x);
 
-/*	    printf("x_aux,x,err2: %e  %e  %e \n", x_aux,x,err2); */
-	    // TODO ESTO A VECES DA nan. A VECES DA 0. COMO CARAJO PUEDE SER*/
-	    // TODO de ver el resultado de esto que imprime en pantalla, norma^2=0.1 luego de 20 iteraciones.??        
-         
+	    // TODO de ver el resultado de esto que imprime en pantalla, norma^2=1e-8 luego de 20 iteraciones
         // dejé eps^2 en lugar de tomar sqrt() en norma. Porque supuestamente sqrt es caro?
-        // esta norma directamente no tiene en cuenta los bordes artificiales 
-/*        if ( err2f < 0.1f ) {	*/
-/*		    printf("iteraciones: %i \n", k);*/
-/*	        return;*/
-/*        }*/
+        // esta norma directamente no tiene en cuenta los bordes artificiales. 
+        // La seteo en 1e-10 para ser conservador con los cambios en los resultados
+        if ( err2 < 0.0000000001f ) {	
+		    printf("iteraciones: %i \n", k);
+	        return;
+        }
 
     }
 }
