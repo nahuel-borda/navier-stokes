@@ -41,20 +41,9 @@ static void set_bnd(unsigned int n, boundary b, float* x)
     x[IX(n + 1, n + 1)] = 0.5f * (x[IX(n, n + 1)] + x[IX(n + 1, n)]);
 }
 
-static float norma_diff(float *x,float *y, unsigned int n) {
-
-	float f=0.0f;
-	for (unsigned int i = 1; i <=n ; i++) {
-        for (unsigned int j = 1; j <= n; j++) {
-	        f = f + ( x[IX(i, j)] - y[IX(i, j)] ) * ( x[IX(i, j)] - y[IX(i, j)] );
-	    }
-    }
-	return f;
-}
-
 static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float aoc)
 {
-	float x_aux;	
+	static float x_aux=0.0f;	
     for (unsigned int k = 0; k < 20; k++) {
 		
         float err2=0.0f;
@@ -67,7 +56,7 @@ static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, c
         }
         set_bnd(n, b, x);
 
-	    printf("err2: %e \n", err2); 
+/*	    printf("x_aux,x,err2: %e  %e  %e \n", x_aux,x,err2); */
 	    // TODO ESTO A VECES DA nan. A VECES DA 0. COMO CARAJO PUEDE SER*/
 	    // TODO de ver el resultado de esto que imprime en pantalla, norma^2=0.1 luego de 20 iteraciones.??        
          
@@ -85,6 +74,7 @@ static void diffuse(unsigned int size, unsigned int n, boundary b, float* x, con
 {
     float a = dt * diff * n * n; //TODO estas dos constantes se podrían pasar como argumento. Así no se calculan cada vez que se llama diffuse
     float aoc=a/(1.f + 4.f * a);
+/*    printf("diffuse");*/
     lin_solve(size, n, b, x, x0, aoc);
 }
 
@@ -133,6 +123,7 @@ static void project(unsigned int size, unsigned int n, float* u, float* v, float
     set_bnd(n, NONE, div);
     set_bnd(n, NONE, p);
 	
+/*    printf("project");*/
     lin_solve(size, n, NONE, p, div, 0.25f );
 
     for (unsigned int i = 1; i <= n; i++) {
