@@ -58,10 +58,10 @@ static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, c
         }
         set_bnd(n, b, x);
 
-	    // TODO de ver el resultado de esto que imprime en pantalla, norma^2=1e-8 luego de 20 iteraciones
+	    // De ver el resultado de esto que imprime en pantalla, norma^2=1e-8 luego de 20 iteraciones
         // dejé eps^2 en lugar de tomar sqrt() en norma. Porque supuestamente sqrt es caro?
         // esta norma directamente no tiene en cuenta los bordes artificiales. 
-        // La seteo en 1e-10 para ser conservador con los cambios en los resultados
+        // La seteo en 1e-10 para ser conservador con los cambios en los resultados. es decir eps=1e-5.
         if ( err2 < 0.0000000001f ) {	
 		    printf("iteraciones: %i \n", k);
 	        return;
