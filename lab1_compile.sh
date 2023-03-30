@@ -24,11 +24,11 @@ for i in "gcc" ; do
 		make
 
 		# Ejecuto headless
-		for n in $(eval echo "{1.."$Nruns"..1}"); do
-			# rm ....... # Borro archivos de datos anteriores
-			./${headless_name}
-			echo ''
-		done
+		#for n in $(eval echo "{1.."$Nruns"..1}"); do
+		#	# rm ....... # Borro archivos de datos anteriores
+		#	./${headless_name}
+		#	echo ''
+		#done
 		
 		
 	done

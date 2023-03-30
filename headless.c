@@ -199,7 +199,7 @@ int main(int argc, char** argv)
     if (argc == 1) {
         N = 128;
         dt = 0.1f;
-        diff = 0.0f;
+        diff = 1.0f;
         visc = 0.0f;
         force = 5.0f;
         source = 100.0f;

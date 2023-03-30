@@ -1,6 +1,8 @@
 #include <stddef.h>
-
+#include <stdlib.h>
+#include <stdio.h>
 #include "solver.h"
+#include <math.h>
 
 #define IX(i, j) ((i) + (n + 2) * (j))
 #define SWAP(x0, x)      \
@@ -39,23 +41,59 @@ static void set_bnd(unsigned int n, boundary b, float* x)
     x[IX(n + 1, n + 1)] = 0.5f * (x[IX(n, n + 1)] + x[IX(n + 1, n)]);
 }
 
-static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float aoc)
+static float norma_diff(float *x,float *y, unsigned int n) {
+
+	float f=0.0f;
+	for (unsigned int i = 1; i <=n ; i++) {
+        for (unsigned int j = 1; j <= n; j++) {
+	        f = f + ( x[IX(i, j)] - y[IX(i, j)] ) * ( x[IX(i, j)] - y[IX(i, j)] );
+	    }
+    }
+	return f;
+}
+
+static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float aoc)
 {
+	float *y; // variable auxiliar con el resultado de la iteración anterior
+	y = (float*)malloc(size * sizeof(float)); // TODO como allocateo y?   
+	
     for (unsigned int k = 0; k < 20; k++) {
+		
+		// hago una copia de x
+		for (unsigned int i = 0; i < size; i++) {     // TODO ESTO ES JODA????
+			y[i] = x[i];     
+		}  
+		
         for (unsigned int i = 1; i <= n; i++) {
             for (unsigned int j = 1; j <= n; j++) {
                 x[IX(i, j)] = (x0[IX(i, j)] + aoc * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) ;
             }
         }
         set_bnd(n, b, x);
+
+	    printf("norma: %e \n", norma_diff(x,y,n)); //TODO ESTO A VECES DA nan. A VECES DA 0. COMO CARAJO PUEDE SER
+         
+        // dejé eps^2 en lugar de tomar sqrt() en norma. Porque supuestamente sqrt es caro?
+        // norma ya no tiene en cuenta los bordes artificiales 
+/*        if ( fabsf(norma_diff(x,y,n)) < 0.1f ) {	*/
+/*		    printf("iteraciones: %i \n", k);*/
+/*            free(y); // TODO tengo que desallocatear y??*/
+/*	        return;*/
+/*        }*/
+
     }
+/*    printf("norma: %e \n", norma_diff(x,y,n)); //TODO ESTO A VECES DA nan.*/
+    // TODO de ver el resultado de esto que imprime en pantalla, norma^2=0.1 luego de 20 iteraciones.
+
+    free(y); // TODO tengo que desallocatear y??
+
 }
 
-static void diffuse(unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
+static void diffuse(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
 {
     float a = dt * diff * n * n; //TODO estas dos constantes se podrían pasar como argumento. Así no se calculan cada vez que se llama diffuse
     float aoc=a/(1.f + 4.f * a);
-    lin_solve(n, b, x, x0, aoc);
+    lin_solve(size, n, b, x, x0, aoc);
 }
 
 static void advect(unsigned int n, boundary b, float* d, const float* d0, const float* u, const float* v, float dt)
@@ -92,7 +130,7 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
     set_bnd(n, b, d);
 }
 
-static void project(unsigned int n, float* u, float* v, float* p, float* div)
+static void project(unsigned int size, unsigned int n, float* u, float* v, float* p, float* div)
 {
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
@@ -103,7 +141,7 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div)
     set_bnd(n, NONE, div);
     set_bnd(n, NONE, p);
 	
-    lin_solve(n, NONE, p, div, 0.25f );
+    lin_solve(size, n, NONE, p, div, 0.25f );
 
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
@@ -117,25 +155,29 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div)
 
 void dens_step(unsigned int n, float* x, float* x0, float* u, float* v, float diff, float dt)
 {
+	float size = (n + 2) * (n + 2);	// TODO esto me gustaría que sea static
+	
     add_source(n, x, x0, dt);
     SWAP(x0, x);
-    diffuse(n, NONE, x, x0, diff, dt);
+    diffuse(size, n, NONE, x, x0, diff, dt);
     SWAP(x0, x);
     advect(n, NONE, x, x0, u, v, dt);
 }
 
 void vel_step(unsigned int n, float* u, float* v, float* u0, float* v0, float visc, float dt)
 {
+	float size = (n + 2) * (n + 2); // TODO esto me gustaría que sea static
+	
     add_source(n, u, u0, dt);
     add_source(n, v, v0, dt);
     SWAP(u0, u);
-    diffuse(n, VERTICAL, u, u0, visc, dt);
+    diffuse(size, n, VERTICAL, u, u0, visc, dt);
     SWAP(v0, v);
-    diffuse(n, HORIZONTAL, v, v0, visc, dt);
-    project(n, u, v, u0, v0);
+    diffuse(size, n, HORIZONTAL, v, v0, visc, dt);
+    project(size, n, u, v, u0, v0);
     SWAP(u0, u);
     SWAP(v0, v);
     advect(n, VERTICAL, u, u0, u0, v0, dt);
     advect(n, HORIZONTAL, v, v0, u0, v0, dt);
-    project(n, u, v, u0, v0);
+    project(size, n, u, v, u0, v0);
 }
