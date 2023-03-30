@@ -22,7 +22,7 @@
 
 /* macros */
 
-#define IX(i, j) ((i) + (N + 2) * (j)) //TODO esto se va a llamar muchísimo, esto no es un ejemplo de donde conviene usar inlining?
+#define IX(i, j) ((j) + (N + 2) * (i)) //TODO esto se va a llamar muchísimo, esto no es un ejemplo de donde conviene usar inlining?
 //TODO en esta función el índice menos significativo es i. Eso quiere decir que después en los arrays el loop externo debería
 // ser sobre j, y el loop interior sobre i. Pero en solver.c todos los loops están escritos al revés. O lo estoy viendo al revés yo?
 
