@@ -63,7 +63,7 @@ static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, c
         // esta norma directamente no tiene en cuenta los bordes artificiales. 
         // La seteo en 1e-10 para ser conservador con los cambios en los resultados. es decir eps=1e-5.
         if ( err2 < 0.0000000001f ) {	
-		    printf("iteraciones: %i \n", k);
+/*		    printf("iteraciones: %i \n", k);*/
 	        return;
         }
 
