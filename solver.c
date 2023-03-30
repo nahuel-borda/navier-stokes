@@ -41,7 +41,7 @@ static void set_bnd(unsigned int n, boundary b, float* x)
     x[IX(n + 1, n + 1)] = 0.5f * (x[IX(n, n + 1)] + x[IX(n + 1, n)]);
 }
 
-static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float aoc)
+static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float a, float uoc)
 {
 	static float x_aux=0.0f;	
     for (unsigned int k = 0; k < 20; k++) {
@@ -50,7 +50,7 @@ static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, c
         for (unsigned int i = 1; i <= n; i++) {
             for (unsigned int j = 1; j <= n; j++) {
 	            x_aux=x[IX(i, j)]; //guardo el valor anterior
-                x[IX(i, j)] = (x0[IX(i, j)] + aoc * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) ;
+                x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) * uoc ;
                 err2 += ( x[IX(i, j)] - x_aux ) * ( x[IX(i, j)] - x_aux );
             }
         }
@@ -73,9 +73,9 @@ static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, c
 static void diffuse(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
 {
     float a = dt * diff * n * n; //TODO estas dos constantes se podrían pasar como argumento. Así no se calculan cada vez que se llama diffuse
-    float aoc=a/(1.f + 4.f * a);
+    float uoc=1.f/(1.f + 4.f * a);
 /*    printf("diffuse");*/
-    lin_solve(size, n, b, x, x0, aoc);
+    lin_solve(size, n, b, x, x0, a,uoc);
 }
 
 static void advect(unsigned int n, boundary b, float* d, const float* d0, const float* u, const float* v, float dt)
@@ -124,7 +124,7 @@ static void project(unsigned int size, unsigned int n, float* u, float* v, float
     set_bnd(n, NONE, p);
 	
 /*    printf("project");*/
-    lin_solve(size, n, NONE, p, div, 0.25f );
+    lin_solve(size, n, NONE, p, div, 1.f,0.25f );
 
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
