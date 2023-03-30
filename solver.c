@@ -54,43 +54,31 @@ static float norma_diff(float *x,float *y, unsigned int n) {
 
 static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float aoc)
 {
-	float *y; // variable auxiliar con el resultado de la iteración anterior
-	y = (float*)malloc(size * sizeof(float)); // TODO como allocateo y?   
-	
+	float x_aux;	
     for (unsigned int k = 0; k < 20; k++) {
-		
-		// hago una copia de x
-		for (unsigned int i = 0; i < size; i++) {     // TODO ESTO ES JODA????
-			y[i] = x[i];     
-		}  
 		
         float err2=0.0f;
         for (unsigned int i = 1; i <= n; i++) {
             for (unsigned int j = 1; j <= n; j++) {
+	            x_aux=x[IX(i, j)]; //guardo el valor anterior
                 x[IX(i, j)] = (x0[IX(i, j)] + aoc * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) ;
-                err2 += ( x[IX(i, j)] - y[IX(i, j)] ) * ( x[IX(i, j)] - y[IX(i, j)] );
+                err2 += ( x[IX(i, j)] - x_aux ) * ( x[IX(i, j)] - x_aux );
             }
         }
         set_bnd(n, b, x);
 
-/*	    printf("norma: %e \n", norma_diff(x,y,n)); //TODO ESTO A VECES DA nan. A VECES DA 0. COMO CARAJO PUEDE SER*/
-	    printf("err2: %e \n", err2);
-        
+	    printf("err2: %e \n", err2); 
+	    // TODO ESTO A VECES DA nan. A VECES DA 0. COMO CARAJO PUEDE SER*/
+	    // TODO de ver el resultado de esto que imprime en pantalla, norma^2=0.1 luego de 20 iteraciones.??        
          
         // dejé eps^2 en lugar de tomar sqrt() en norma. Porque supuestamente sqrt es caro?
-        // norma ya no tiene en cuenta los bordes artificiales 
-/*        if ( fabsf(norma_diff(x,y,n)) < 0.1f ) {	*/
+        // esta norma directamente no tiene en cuenta los bordes artificiales 
+/*        if ( err2f < 0.1f ) {	*/
 /*		    printf("iteraciones: %i \n", k);*/
-/*            free(y); // TODO tengo que desallocatear y??*/
 /*	        return;*/
 /*        }*/
 
     }
-/*    printf("norma: %e \n", norma_diff(x,y,n)); //TODO ESTO A VECES DA nan.*/
-    // TODO de ver el resultado de esto que imprime en pantalla, norma^2=0.1 luego de 20 iteraciones.
-
-    free(y); // TODO tengo que desallocatear y??
-
 }
 
 static void diffuse(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
