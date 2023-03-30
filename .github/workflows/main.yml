@@ -1,0 +1,38 @@
+name: Collect Performance Metrics
+
+on:
+  workflow_dispatch:
+
+env:
+  gh_sha: $GITHUB_SHA
+
+jobs:
+  collect_metrics:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install gspread
+      run: pip install gspread oauth2client datetime pytz
+
+    - name: Execute file1.sh
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        sudo perf stat -x ';' -o file1.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time sh file1.sh
+        python write_to_sheet.py file1.txt $pkpass $GITHUB_SHA "n/d" "amd"
+      
+    - name: Execute file2.sh
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        sudo perf stat -x ';' -o file2.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time sh file2.sh
+        python write_to_sheet.py file2.txt $pkpass $GITHUB_SHA "n/d" "amd"
