@@ -64,14 +64,18 @@ static void lin_solve(unsigned int size, unsigned int n, boundary b, float* x, c
 			y[i] = x[i];     
 		}  
 		
+        float err2=0.0f;
         for (unsigned int i = 1; i <= n; i++) {
             for (unsigned int j = 1; j <= n; j++) {
                 x[IX(i, j)] = (x0[IX(i, j)] + aoc * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) ;
+                err2 += ( x[IX(i, j)] - y[IX(i, j)] ) * ( x[IX(i, j)] - y[IX(i, j)] );
             }
         }
         set_bnd(n, b, x);
 
-	    printf("norma: %e \n", norma_diff(x,y,n)); //TODO ESTO A VECES DA nan. A VECES DA 0. COMO CARAJO PUEDE SER
+/*	    printf("norma: %e \n", norma_diff(x,y,n)); //TODO ESTO A VECES DA nan. A VECES DA 0. COMO CARAJO PUEDE SER*/
+	    printf("err2: %e \n", err2);
+        
          
         // dejé eps^2 en lugar de tomar sqrt() en norma. Porque supuestamente sqrt es caro?
         // norma ya no tiene en cuenta los bordes artificiales 
