@@ -11,7 +11,7 @@ means=[]
 legend=[]
 
 
-lista1=['gcc','icx']
+lista1=['gcc']
 lista2=["-O0", "-O1", "-O2", "-O3", "-Ofast", "-Os"]
 #lista2=["-O0", "-O1"]
 
@@ -43,7 +43,7 @@ for i in lista1:
 	# graficos
 	cant=len(lista1)*len(lista2)
 	plt.bar(range(0,cant),means,color=colores[0:cant],edgecolor='black')
-	plt.ylabel('ns/cell)')
+	plt.ylabel('cell/ns')
 
 	## defino las leyendas
 	plt.title(lista1)
