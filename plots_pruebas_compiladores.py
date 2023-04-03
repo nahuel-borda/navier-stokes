@@ -12,8 +12,8 @@ legend=[]
 
 
 lista1=['gcc']
-#lista2=["-O0", "-O1", "-O2", "-O3", "-Ofast", "-Os"]
-lista2=["-O0","-O1"]
+lista2=["-O0", "-O1", "-O2", "-O3", "-Ofast", "-Os"]
+#lista2=["-O0", "-O1"]
 
 # Hago promedios a partir de los métricas obtenidas
 for i in lista1:
@@ -24,7 +24,7 @@ for i in lista1:
 #		data = loadtxt(namefile, delimiter=',', skiprows=0, dtype=str)
 		data = read_csv(namefile,header=None)
 		ns_per_cell=data[0]
-		means.append(mean(ns_per_cell)) # Hago el promedio de todos los ns_per_cell
+		means.append(1./mean(ns_per_cell)) # Hago el promedio de todos los ns_per_cell
 
 
 print(means)
@@ -44,10 +44,14 @@ plt.ylabel('ns/cell)')
 
 ## defino las leyendas
 plt.title('gcc')
-legend=['-O0', '-O1']
+legend=["-O0", "-O1", "-O2", "-O3", "-Ofast", "-Os"]
+#legend=["-O0", "-O1"]
 labels = legend
 handles = [plt.Rectangle((0,0),1,1, color=clr) for clr in colores]
 plt.legend(handles, labels)
 
 # muestra en pantalla
-plt.show()
+#plt.show()
+
+# guarda
+plt.savefig('prueba_comps_codigo_original.png', bbox_inches='tight')
