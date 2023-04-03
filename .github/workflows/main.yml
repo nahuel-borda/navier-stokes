@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  gh_sha: $GITHUB_SHA
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
 jobs:
   collect_metrics:
@@ -27,12 +27,24 @@ jobs:
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
-        sudo perf stat -x ';' -o file1.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time sh file1.sh
-        python write_to_sheet.py file1.txt $pkpass $GITHUB_SHA "n/d" "amd"
-      
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O2"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -O2"
+
     - name: Execute file2.sh
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
-        sudo perf stat -x ';' -o file2.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time sh file2.sh
-        python write_to_sheet.py file2.txt $pkpass $GITHUB_SHA "n/d" "amd"
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O2"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -O2"
