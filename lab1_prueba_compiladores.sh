@@ -3,7 +3,7 @@
 export demo_name=demo
 export headless_name=headless
 
-Nruns=4 # Cantidad de ejecuciones para hacer los promedios de los ns_per_cell
+Nruns=12 # Cantidad de ejecuciones para hacer los promedios de los ns_per_cell
 
 #TODO agregar icc, clang a la lista de compiladores (no los tengo instalados)
 
