@@ -11,12 +11,15 @@ means=[]
 legend=[]
 
 
-lista1=['gcc']
+lista1=['gcc','icx']
 lista2=["-O0", "-O1", "-O2", "-O3", "-Ofast", "-Os"]
 #lista2=["-O0", "-O1"]
 
+
 # Hago promedios a partir de los métricas obtenidas
 for i in lista1:
+
+
 	for j in lista2:
 		namefile="lab1_pruebas_compiladores/datos_"+str(i)+"_"+str(j)+"/headless.dat"
 		print(namefile)
@@ -27,31 +30,32 @@ for i in lista1:
 		means.append(1./mean(ns_per_cell)) # Hago el promedio de todos los ns_per_cell
 
 
-print(means)
+	print(means)
 
 
-# me hago una lista de colores
-colores_tab=mcolors.TABLEAU_COLORS
-colores=[]
-for clr in colores_tab.values():
-	colores.append(clr)
-	
+	# me hago una lista de colores
+	colores_tab=mcolors.TABLEAU_COLORS
+	colores=[]
+	for clr in colores_tab.values():
+		colores.append(clr)
+		
 
-# graficos
-cant=len(lista1)*len(lista2)
-plt.bar(range(0,cant),means,color=colores[0:cant],edgecolor='black')
-plt.ylabel('ns/cell)')
+	# graficos
+	cant=len(lista1)*len(lista2)
+	plt.bar(range(0,cant),means,color=colores[0:cant],edgecolor='black')
+	plt.ylabel('ns/cell)')
 
-## defino las leyendas
-plt.title('gcc')
-legend=["-O0", "-O1", "-O2", "-O3", "-Ofast", "-Os"]
-#legend=["-O0", "-O1"]
-labels = legend
-handles = [plt.Rectangle((0,0),1,1, color=clr) for clr in colores]
-plt.legend(handles, labels)
+	## defino las leyendas
+	plt.title(lista1)
+	#legend=["-O0", "-O1", "-O2", "-O3", "-Ofast", "-Os"]
+	legend=lista2
+	labels = legend
+	handles = [plt.Rectangle((0,0),1,1, color=clr) for clr in colores]
+	plt.legend(handles, labels)
 
-# muestra en pantalla
-#plt.show()
+	# muestra en pantalla
+	#plt.show()
 
-# guarda
-plt.savefig('prueba_comps_codigo_original.png', bbox_inches='tight')
+	# guarda
+	filename="prueba_comps_codigo_original_"+str(i)+".png"
+	plt.savefig(filename, bbox_inches='tight')
