@@ -18,7 +18,7 @@ mkdir $pardir
 
 
 for i in "gcc" ; do 
-	for j in "-O0" "-O1" "-O2" "-O3" "-Ofast" "-Os" "-Oz"; do
+	for j in "-O0" "-O1" "-O2" "-O3" "-Ofast" "-Os"; do
 		
 		#Exporto los nombres de los compiladores y las opciones
 		export CC=$i
