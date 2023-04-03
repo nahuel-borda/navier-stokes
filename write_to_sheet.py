@@ -33,6 +33,8 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(gcreds,scope)
 commit_hash = sys.argv[3]
 commit_name = sys.argv[4]
 architecture = sys.argv[5]
+compiler = sys.argv[6]
+compilation_flags = sys.argv[7]
 
 # authorize the credentials and open the Google Sheet
 client = gspread.authorize(creds)
@@ -47,6 +49,6 @@ with open(sys.argv[1], 'r') as f:
 
 # write the performance metrics to the Google Sheet
 
-row = [commit_hash, commit_name,ba_datetime, architecture] + values
+row = [commit_hash, commit_name,ba_datetime, architecture, compiler, compilation_flags] + values
 
 sheet.append_row(row)
