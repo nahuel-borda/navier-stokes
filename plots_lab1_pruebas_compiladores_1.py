@@ -7,11 +7,11 @@ from pandas import read_csv			# para importar datos
 from numpy import mean				# para promedios
 import matplotlib.colors as mcolors	# para definir colores
 
-means=[]
+
 legend=[]
 
 
-lista1=['gcc']
+lista1=['gcc','icx','clang']
 lista2=["-O0", "-O1", "-O2", "-O3", "-Ofast", "-Os"]
 #lista2=["-O0", "-O1"]
 
@@ -19,7 +19,8 @@ lista2=["-O0", "-O1", "-O2", "-O3", "-Ofast", "-Os"]
 # Hago promedios a partir de los métricas obtenidas
 for i in lista1:
 
-
+	means=[]
+	
 	for j in lista2:
 		namefile="lab1_pruebas_compiladores/datos_"+str(i)+"_"+str(j)+"/headless.dat"
 		print(namefile)
@@ -41,13 +42,15 @@ for i in lista1:
 		
 
 	# graficos
-	cant=len(lista1)*len(lista2)
+	fig = plt.figure()
+	
+	# barras 
+	cant=len(lista2)
 	plt.bar(range(0,cant),means,color=colores[0:cant],edgecolor='black')
 	plt.ylabel('cell/ns')
 
 	## defino las leyendas
-	plt.title(lista1)
-	#legend=["-O0", "-O1", "-O2", "-O3", "-Ofast", "-Os"]
+	plt.title(str(i))
 	legend=lista2
 	labels = legend
 	handles = [plt.Rectangle((0,0),1,1, color=clr) for clr in colores]
@@ -59,3 +62,4 @@ for i in lista1:
 	# guarda
 	filename="prueba_comps_codigo_original_"+str(i)+".png"
 	plt.savefig(filename, bbox_inches='tight')
+	plt.close()
