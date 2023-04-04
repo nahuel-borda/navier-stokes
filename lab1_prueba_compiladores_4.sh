@@ -3,7 +3,7 @@
 export demo_name=demo
 export headless_name=headless
 
-Nruns=12 # Cantidad de ejecuciones para hacer los promedios de los ns_per_cell
+Nruns=1 # Cantidad de ejecuciones para hacer los promedios de los ns_per_cell
 
 #TODO Entiendo que podría haber hecho dos comandos en el makefile que sean por ejemplo
 #     make pruebas_comp que compilen con todos los compiladores y opciones, y prueba_ind 
@@ -15,48 +15,8 @@ pardir="lab1_pruebas_compiladores"
 mkdir $pardir
 
 
-#for i in "gcc"; do 
-#	for j in "-fprofile-generate" "-fprofile-use"; do
-#		
-#		#Exporto los nombres de los compiladores y las opciones
-#		export CC=$i
-#		export CFLAGS="-std=c17 -Wall -Wextra -Ofast -march=native ""$j"	#TODO Esto esta medio choto, como está escrito no hay que cambiar los espacios entre el ""
-
-#		echo ''
-#		echo ''
-#		echo '------------'
-#		echo $CC $CFLAGS
-
-#		# Compilo
-#		make clean
-#		make
-
-#		# Hago un subdirectorio de pardir
-#		dir=datos_${i}_fprofile
-#		mkdir $pardir/$dir
-#		
-#		# Borro archivos de datos anteriores
-#		rm $pardir/$dir/headless.dat 
-#		
-#		# muevo el ejecutable al nuevo directorio
-#		cp ./${headless_name} $pardir/$dir/${headless_name}
-
-#		# Ejecuto headless Nruns veces dentro de dir, se genera un solo archivo de datos con los Nruns resultados.
-#		cd $pardir/$dir
-#		for n in $(eval echo "{1.."$Nruns"..1}"); do
-#			./${headless_name}
-#			echo ''
-#		done		
-#		cd ../.. 
-#		
-#		
-#	done
-#	
-#done
-
-
-for i in "icx" "clang"; do 
-	for j in "-fprofile-instr-generate" "-fprofile-instr-use"; do
+for i in "gcc"; do 
+	for j in "-fprofile-generate" "-fprofile-use"; do
 		
 		#Exporto los nombres de los compiladores y las opciones
 		export CC=$i
@@ -94,6 +54,49 @@ for i in "icx" "clang"; do
 	
 done
 
+
+for i in "icx" "clang"; do 
+	# Hago un subdirectorio de pardir
+	dir=datos_${i}_fprofile
+	mkdir $pardir/$dir
+
+	for j in "-fprofile-instr-generate=default.profraw" "-fprofile-instr-use="${pardir}/${dir}"/code.profdata"; do
+		#Exporto los nombres de los compiladores y las opciones
+		export CC=$i
+		export CFLAGS="-std=c17 -Wall -Wextra -Ofast -march=native ""$j"	#TODO Esto esta medio choto, como está escrito no hay que cambiar los espacios entre el ""
+
+		echo ''
+		echo ''
+		echo '------------'
+		echo $CC $CFLAGS
+
+		# Compilo
+		make clean
+		make
+
+		
+		# Borro archivos de datos anteriores
+		rm $pardir/$dir/headless.dat 
+		
+		# muevo el ejecutable al nuevo directorio
+		cp ./${headless_name} $pardir/$dir/${headless_name}
+
+		# Ejecuto headless Nruns veces dentro de dir, se genera un solo archivo de datos con los Nruns resultados.
+		cd $pardir/$dir
+		for n in $(eval echo "{1.."$Nruns"..1}"); do
+			./${headless_name}
+			LLVM_PROFILE_FILE="code-%p.profraw" ./${headless_name}
+			LLVM_PROFILE_FILE="code-%m.profraw" ./${headless_name}
+			echo ''
+		done
+		llvm-profdata merge -output=code.profdata code-*.profraw
+
+		cd ../.. 
+
+
+	done
+
+done
 
 
 
