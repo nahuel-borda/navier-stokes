@@ -60,6 +60,6 @@ for i in lista1:
 	#plt.show()
 
 	# guarda
-	filename="lab1_prueba_comps_v3_codigo_original_"+str(i)+".png"
+	filename="lab1_prueba_comps_v6_codigo_original_"+str(i)+".png"
 	plt.savefig(filename, bbox_inches='tight')
 	plt.close()
