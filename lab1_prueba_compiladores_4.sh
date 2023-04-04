@@ -15,8 +15,48 @@ pardir="lab1_pruebas_compiladores"
 mkdir $pardir
 
 
-for i in "gcc" "icx" "clang" ; do 
-	for j in "-fprofile-generate" "-fprofile-use"; do
+#for i in "gcc"; do 
+#	for j in "-fprofile-generate" "-fprofile-use"; do
+#		
+#		#Exporto los nombres de los compiladores y las opciones
+#		export CC=$i
+#		export CFLAGS="-std=c17 -Wall -Wextra -Ofast -march=native ""$j"	#TODO Esto esta medio choto, como está escrito no hay que cambiar los espacios entre el ""
+
+#		echo ''
+#		echo ''
+#		echo '------------'
+#		echo $CC $CFLAGS
+
+#		# Compilo
+#		make clean
+#		make
+
+#		# Hago un subdirectorio de pardir
+#		dir=datos_${i}_fprofile
+#		mkdir $pardir/$dir
+#		
+#		# Borro archivos de datos anteriores
+#		rm $pardir/$dir/headless.dat 
+#		
+#		# muevo el ejecutable al nuevo directorio
+#		cp ./${headless_name} $pardir/$dir/${headless_name}
+
+#		# Ejecuto headless Nruns veces dentro de dir, se genera un solo archivo de datos con los Nruns resultados.
+#		cd $pardir/$dir
+#		for n in $(eval echo "{1.."$Nruns"..1}"); do
+#			./${headless_name}
+#			echo ''
+#		done		
+#		cd ../.. 
+#		
+#		
+#	done
+#	
+#done
+
+
+for i in "icx" "clang"; do 
+	for j in "-fprofile-instr-generate" "-fprofile-instr-use"; do
 		
 		#Exporto los nombres de los compiladores y las opciones
 		export CC=$i
@@ -53,9 +93,6 @@ for i in "gcc" "icx" "clang" ; do
 	done
 	
 done
-
-
-
 
 
 
