@@ -16,7 +16,7 @@ mkdir $pardir
 
 
 for i in "gcc" "icx" "clang" ; do 
-	for j in "-funroll-loops -finline-functions"; do
+	for j in "-funroll-loops" "-finline-functions"; do
 		
 		#Exporto los nombres de los compiladores y las opciones
 		export CC=$i
