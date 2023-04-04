@@ -12,7 +12,7 @@ legend=[]
 
 
 lista1=['gcc','icx','clang']
-lista2=["-O0", "-march=native", "-fprofile"]
+lista2=["-O0", "-march=native", "fprofile"]
 #lista2=["-O0", "-O1"]
 
 
