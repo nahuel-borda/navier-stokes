@@ -12,7 +12,7 @@ legend=[]
 
 
 lista1=['gcc','icx','clang']
-lista2=["-O0", "-Ofast", "-march=native", "-funroll-loops"]
+lista2=["-O0", "-Ofast", "-march=native", "-funroll-loops","-finline-functions"]
 #lista2=["-O0", "-O1"]
 
 
@@ -51,7 +51,7 @@ for i in lista1:
 
 	## defino las leyendas
 	plt.title(str(i))
-	legend=["-O0", "-Ofast", "-Ofast -march=native","-Ofast -march=native -funroll-loops"]
+	legend=["-O0", "-Ofast", "-Ofast -march=native","-Ofast -march=native -funroll-loops","-Ofast -march=native -finline-functions"]
 	labels = legend
 	handles = [plt.Rectangle((0,0),1,1, color=clr) for clr in colores]
 	plt.legend(handles, labels)
