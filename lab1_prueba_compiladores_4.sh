@@ -32,7 +32,7 @@ for i in "gcc" "icx" "clang" ; do
 		make
 
 		# Hago un subdirectorio de pardir
-		dir=datos_${i}_${j}
+		dir=datos_${i}_fprofile
 		mkdir $pardir/$dir
 		
 		# Borro archivos de datos anteriores
