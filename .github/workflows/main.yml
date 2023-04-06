@@ -98,6 +98,21 @@ jobs:
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -Ofast"
 
+    - name: "amd gcc -std=c17 -Wall -Wextra -O0 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O0 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -O0 -march=native"
+    
     - name: "amd gcc -std=c17 -Wall -Wextra -O1 -march=native"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
@@ -233,6 +248,23 @@ jobs:
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -Ofast"
 
+
+    - name: "amd clang -std=c17 -Wall -Wextra -O0 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O0 -march=native"
+
+
     - name: "amd clang -std=c17 -Wall -Wextra -O1 -march=native"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
@@ -367,6 +399,21 @@ jobs:
         ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast"' > output_amd.txt
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast"
+
+    - name: "amd aocc -std=c17 -Wall -Wextra -O0 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O0 -march=native"
 
     - name: "amd aocc -std=c17 -Wall -Wextra -O1 -march=native"
       env:
