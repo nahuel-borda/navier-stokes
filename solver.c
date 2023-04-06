@@ -1,6 +1,8 @@
 #include <stddef.h>
-
+#include <stdlib.h>
+#include <stdio.h>
 #include "solver.h"
+
 
 #define IX(i, j) ((i) + (n + 2) * (j))
 #define SWAP(x0, x)      \
@@ -41,14 +43,33 @@ static void set_bnd(unsigned int n, boundary b, float* x)
 
 static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float a, float c)
 {
+	float size=(n+2)*(n+2);
+	float *y; // variable auxiliar con el resultado de la iteración anterior
+	y = (float*)malloc(size * sizeof(float)); // TODO como allocateo y? 
+	
+	unsigned int i,j,jsw,isw;
+	
+	
     for (unsigned int k = 0; k < 20; k++) {
-        for (unsigned int i = 1; i <= n; i++) {
-            for (unsigned int j = 1; j <= n; j++) {
-                x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) / c;
-            }
-        }
+    
+   		// hago una copia de x
+		for (unsigned int i = 0; i < size; i++) {     // TODO ESTO ES JODA????
+			y[i] = x[i];     
+		}  
+    
+		for (unsigned int ipass=0,jsw=1;ipass<2;ipass++,jsw=3-jsw) { // Esto toma dos pares de valores (ipass,jsw)=(0,1)=(1,2) 
+			for (j=1,isw=jsw;j<n-1;j++,isw=3-isw)	// esto toma valores (j,isw)=(1,
+				for (i=isw;i<n-1;i+=2)
+					printf("(%d,%d):  (%d,%d), (%d,%d), (%d,%d), (%d,%d) \n" ,i,j,i - 1, j,i + 1, j,i, j - 1,i, j + 1);
+	                x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) / c;
+/*					printf("(%d,%d):  %lf, %lf,%lf,%lf \n" ,i,j,x[IX(i - 1, j)],x[IX(i + 1, j)],x[IX(i, j - 1)],x[IX(i, j + 1)]);	                */
+		}        
+        
+        
         set_bnd(n, b, x);
     }
+    
+    free(y); 
 }
 
 static void diffuse(unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
