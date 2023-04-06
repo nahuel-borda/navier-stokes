@@ -8,7 +8,7 @@ Nruns=1 # Cantidad de ejecuciones para hacer los promedios de los ns_per_cell
 #TODO faltaría que el programa guarde algunos datos para después comparar (datos de salida para tests, y datos de metricas para comparar)
 
 for i in "gcc" ; do 
-	for j in "-O3"; do
+	for j in "-O0"; do
 		
 		#Exporto los nombres de los compiladores y las opciones
 		export CC=$i
