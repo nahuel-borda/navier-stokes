@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
 
 env:
-  gh_sha: $GITHUB_SHA
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
 jobs:
-  collect_metrics:
+  collect_metrics_atom:
 
     runs-on: ubuntu-latest
 
@@ -23,16 +23,872 @@ jobs:
     - name: Install gspread
       run: pip install gspread oauth2client datetime pytz
 
-    - name: Execute file1.sh
+    - name: "amd gcc -std=c17 -Wall -Wextra -O0"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
-        sudo perf stat -x ';' -o file1.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time sh file1.sh
-        python write_to_sheet.py file1.txt $pkpass $GITHUB_SHA "n/d" "amd"
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O0"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -O0"
+
+    - name: "amd gcc -std=c17 -Wall -Wextra -O1"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O1"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -O1"
+
+    - name: "amd gcc -std=c17 -Wall -Wextra -O2"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O2"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -O2"
+
+    - name: "amd gcc -std=c17 -Wall -Wextra -O3"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O3"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -O3"
+    
+    - name: "amd gcc -std=c17 -Wall -Wextra -Ofast"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -Ofast"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -Ofast"
+
+    - name: "amd gcc -std=c17 -Wall -Wextra -O1 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O1 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -O1 -march=native"
+
+    - name: "amd gcc -std=c17 -Wall -Wextra -O2 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O2 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -O2 -march=native"
+
+    - name: "amd gcc -std=c17 -Wall -Wextra -O3 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O3 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -O3 -march=native"
+    
+    - name: "amd gcc -std=c17 -Wall -Wextra -Ofast -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -Ofast -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -Ofast -march=native"
+    
+    - name: "amd clang -std=c17 -Wall -Wextra -O0"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O0"
+
+    - name: "amd clang -std=c17 -Wall -Wextra -O1"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O1"
+
+    - name: "amd clang -std=c17 -Wall -Wextra -O2"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O2"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O2"
+
+    - name: "amd clang -std=c17 -Wall -Wextra -O3"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O3"
+    
+    - name: "amd clang -std=c17 -Wall -Wextra -Ofast"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -Ofast"
+
+    - name: "amd clang -std=c17 -Wall -Wextra -O1 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O1 -march=native"
+
+    - name: "amd clang -std=c17 -Wall -Wextra -O2 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O2 -march=native"
+
+    - name: "amd clang -std=c17 -Wall -Wextra -O3 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O3 -march=native"
+    
+    - name: "amd clang -std=c17 -Wall -Wextra -Ofast -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -Ofast -march=native"
+
+    - name: "amd aocc -std=c17 -Wall -Wextra -O0"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O0"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O0"
+
+    - name: "amd aocc -std=c17 -Wall -Wextra -O1"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O1"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O1"
+
+    - name: "amd aocc -std=c17 -Wall -Wextra -O2"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O2"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O2"
+
+    - name: "amd aocc -std=c17 -Wall -Wextra -O3"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O3"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O3"
+    
+    - name: "amd aocc -std=c17 -Wall -Wextra -Ofast"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast"
+
+    - name: "amd aocc -std=c17 -Wall -Wextra -O1 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O1 -march=native"
+
+    - name: "amd aocc -std=c17 -Wall -Wextra -O2 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O2 -march=native"
+
+    - name: "amd aocc -std=c17 -Wall -Wextra -O3 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O3 -march=native"
+    
+    - name: "amd aocc -std=c17 -Wall -Wextra -Ofast -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast -march=native"
+
+  collect_metrics_zx81:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
       
-    - name: Execute file2.sh
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install gspread
+      run: pip install gspread oauth2client datetime pytz
+
+    - name: "intel gcc -std=c17 -Wall -Wextra -O0"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
-        sudo perf stat -x ';' -o file2.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time sh file2.sh
-        python write_to_sheet.py file2.txt $pkpass $GITHUB_SHA "n/d" "amd"
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O0"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -O0"
+
+    - name: "intel gcc -std=c17 -Wall -Wextra -O1"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O1"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -O1"
+      
+    - name: "intel gcc -std=c17 -Wall -Wextra -O2"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O2"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -O2"
+
+    - name: "intel gcc -std=c17 -Wall -Wextra -O3"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O3"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -O3"
+
+    - name: "intel gcc -std=c17 -Wall -Wextra -Ofast"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -Ofast"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -Ofast"
+
+    - name: "intel gcc -std=c17 -Wall -Wextra -O0 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O0 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -O0 -march=native"
+
+    - name: "intel gcc -std=c17 -Wall -Wextra -O1 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O1 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -O1 -march=native"
+
+    - name: "intel gcc -std=c17 -Wall -Wextra -O2 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O2 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -O2 -march=native"
+
+    - name: "intel gcc -std=c17 -Wall -Wextra -O3 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -O3 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -O3 -march=native"
+
+    - name: "intel gcc -std=c17 -Wall -Wextra -Ofast -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh gcc "-std=c17 -Wall -Wextra -Ofast -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -Ofast -march=native"
+    
+    - name: "intel clang -std=c17 -Wall -Wextra -O0"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O0"
+
+    - name: "intel clang -std=c17 -Wall -Wextra -O1"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O1"
+      
+    - name: "intel clang -std=c17 -Wall -Wextra -O2"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O2"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O2"
+
+    - name: "intel clang -std=c17 -Wall -Wextra -O3"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O3"
+
+    - name: "intel clang -std=c17 -Wall -Wextra -Ofast"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -Ofast"
+
+    - name: "intel clang -std=c17 -Wall -Wextra -O0 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O0 -march=native"
+
+    - name: "intel clang -std=c17 -Wall -Wextra -O1 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O1 -march=native"
+
+    - name: "intel clang -std=c17 -Wall -Wextra -O2 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O2 -march=native"
+
+    - name: "intel clang -std=c17 -Wall -Wextra -O3 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O3 -march=native"
+
+    - name: "intel clang -std=c17 -Wall -Wextra -Ofast -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -Ofast -march=native"
+
+    - name: "intel icc -std=c17 -Wall -Wextra -O0"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1; bash run.sh icc "-std=c17 -Wall -Wextra -O0"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icc" "-std=c17 -Wall -Wextra -O0"
+
+    - name: "intel icc -std=c17 -Wall -Wextra -O1"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1; bash run.sh icc "-std=c17 -Wall -Wextra -O1"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icc" "-std=c17 -Wall -Wextra -O1"
+      
+    - name: "intel icc -std=c17 -Wall -Wextra -O2"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1; bash run.sh icc "-std=c17 -Wall -Wextra -O2"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icc" "-std=c17 -Wall -Wextra -O2"
+
+    - name: "intel icc -std=c17 -Wall -Wextra -O3"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1; bash run.sh icc "-std=c17 -Wall -Wextra -O3"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icc" "-std=c17 -Wall -Wextra -O3"
+
+    - name: "intel icc -std=c17 -Wall -Wextra -Ofast"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1; bash run.sh icc "-std=c17 -Wall -Wextra -Ofast"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icc" "-std=c17 -Wall -Wextra -Ofast"
+
+    - name: "intel icc -std=c17 -Wall -Wextra -O0 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1; bash run.sh icc "-std=c17 -Wall -Wextra -O0 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icc" "-std=c17 -Wall -Wextra -O0 -march=native"
+
+    - name: "intel icc -std=c17 -Wall -Wextra -O1 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1; bash run.sh icc "-std=c17 -Wall -Wextra -O1 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icc" "-std=c17 -Wall -Wextra -O1 -march=native"
+
+    - name: "intel icc -std=c17 -Wall -Wextra -O2 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1; bash run.sh icc "-std=c17 -Wall -Wextra -O2 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icc" "-std=c17 -Wall -Wextra -O2 -march=native"
+
+    - name: "intel icc -std=c17 -Wall -Wextra -O3 -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1; bash run.sh icc "-std=c17 -Wall -Wextra -O3 -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icc" "-std=c17 -Wall -Wextra -O3 -march=native"
+
+    - name: "intel icc -std=c17 -Wall -Wextra -Ofast -march=native"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1; bash run.sh icc "-std=c17 -Wall -Wextra -Ofast -march=native"' > output_intel.txt
+        rm ssh_key
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icc" "-std=c17 -Wall -Wextra -Ofast -march=native"

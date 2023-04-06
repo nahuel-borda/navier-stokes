@@ -3,7 +3,7 @@
 export demo_name=demo
 export headless_name=headless
 
-Nruns=2 # Cantidad de ejecuciones para hacer los promedios de los ns_per_cell
+Nruns=12 # Cantidad de ejecuciones para hacer los promedios de los ns_per_cell
 
 #TODO agregar icc, clang a la lista de compiladores (no los tengo instalados)
 
@@ -17,12 +17,12 @@ pardir="lab1_pruebas_compiladores"
 mkdir $pardir
 
 
-for i in "gcc" ; do 
-	for j in "-O0" "-O1" "-O2" "-O3" "-Ofast" "-Os" "-Oz"; do
+for i in "gcc" "icx" "clang" ; do 
+	for j in "-march=native"; do
 		
 		#Exporto los nombres de los compiladores y las opciones
 		export CC=$i
-		export CFLAGS="-std=c17 -Wall -Wextra ""$j"	#TODO Esto esta medio choto, como está escrito no hay que cambiar los espacios entre el ""
+		export CFLAGS="-std=c17 -Wall -Wextra -Ofast ""$j"	#TODO Esto esta medio choto, como está escrito no hay que cambiar los espacios entre el ""
 
 		echo ''
 		echo ''
@@ -33,12 +33,12 @@ for i in "gcc" ; do
 		make clean
 		make
 
-		# Borro archivos de datos anteriores
-		rm ./headless.dat 	
-
 		# Hago un subdirectorio de pardir
 		dir=datos_${i}_${j}
 		mkdir $pardir/$dir
+		
+		# Borro archivos de datos anteriores
+		rm $pardir/$dir/headless.dat 
 		
 		# muevo el ejecutable al nuevo directorio
 		cp ./${headless_name} $pardir/$dir/${headless_name}
