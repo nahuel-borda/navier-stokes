@@ -18,7 +18,7 @@ mkdir $pardir
 
 
 for i in "gcc" "clang" "icx" ; do 
-	for j in "-O0" "-Ofast -march=native"; do
+	for j in "-O0"; do
 		
 		#Exporto los nombres de los compiladores y las opciones
 		export CC=$i
