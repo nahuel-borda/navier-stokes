@@ -4,7 +4,7 @@
 #include "solver.h"
 #include <math.h>
 
-#define IX(i, j) ((i) + (n + 2) * (j))
+#define IX(i, j) ((j) + (n + 2) * (i))
 #define SWAP(x0, x)      \
     {                    \
         float* tmp = x0; \
