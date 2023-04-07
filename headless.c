@@ -157,8 +157,8 @@ static void one_step(void)
         printf("%lf, %lf, %lf, %lf: ns per cell total, react, vel_step, dens_step\n",
                (react_ns_p_cell + vel_ns_p_cell + dens_ns_p_cell) / times,
                react_ns_p_cell / times, vel_ns_p_cell / times, dens_ns_p_cell / times);
-               
-        fprintf(fptr,"%lf, %lf, %lf, %lf: ns per cell total, react, vel_step, dens_step\n",
+
+        fprintf(fptr,"%lf, %lf, %lf, %lf\n",
                (react_ns_p_cell + vel_ns_p_cell + dens_ns_p_cell) / times,
                react_ns_p_cell / times, vel_ns_p_cell / times, dens_ns_p_cell / times);
 
@@ -221,6 +221,7 @@ int main(int argc, char** argv)
     
 
 	fptr=fopen(strcat(argv[0],".dat"),"a");	//Abro un archivo de datos
+/*    fprintf(fptr,"ns per cell total, react, vel_step, dens_step\n");*/
     for (i = 0; i < 2048; i++) {
         one_step();
     }
