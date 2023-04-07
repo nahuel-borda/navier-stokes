@@ -41,6 +41,7 @@ static void set_bnd(unsigned int n, boundary b, float* x)
     x[IX(n + 1, n + 1)] = 0.5f * (x[IX(n, n + 1)] + x[IX(n + 1, n)]);
 }
 
+
 static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float a, float c)
 {
 	float x_aux;
@@ -123,7 +124,6 @@ static void project(unsigned int size, unsigned int n, float* u, float* v, float
 	
 /*    printf("project");*/
     lin_solve(n, NONE, p, div, 1, 4);
-
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
             u[IX(i, j)] -= 0.5f * n * (p[IX(i + 1, j)] - p[IX(i - 1, j)]);
