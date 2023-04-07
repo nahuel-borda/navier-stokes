@@ -1,5 +1,5 @@
 ## Navier Strokes
-
+## V2 - Gauss Seidel Relaxation
 Paper en el que se basa el código:
 - [Paper + código original](https://www.dgp.toronto.edu/public_user/stam/reality/Research/pdf/GDC03.pdf)
 - [Página en Wikipedia](https://en.wikipedia.org/wiki/Navier%E2%80%93Stokes_equations)

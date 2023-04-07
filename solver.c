@@ -39,12 +39,12 @@ static void set_bnd(unsigned int n, boundary b, float* x)
     x[IX(n + 1, n + 1)] = 0.5f * (x[IX(n, n + 1)] + x[IX(n + 1, n)]);
 }
 
-static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float a, float c)
+static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float a, float uoc)
 {
     for (unsigned int k = 0; k < 20; k++) {
         for (unsigned int i = 1; i <= n; i++) {
             for (unsigned int j = 1; j <= n; j++) {
-                x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) / c;
+                x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) *uoc ;
             }
         }
         set_bnd(n, b, x);
@@ -53,8 +53,9 @@ static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, flo
 
 static void diffuse(unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
 {
-    float a = dt * diff * n * n;
-    lin_solve(n, b, x, x0, a, 1 + 4 * a);
+    float a = dt * diff * n * n; //TODO estas dos constantes se podrían pasar como argumento. Así no se calculan cada vez que se llama diffuse
+    float uoc=1.f/(1.f + 4.f * a);
+    lin_solve(n, b, x, x0, a,uoc);
 }
 
 static void advect(unsigned int n, boundary b, float* d, const float* d0, const float* u, const float* v, float dt)
@@ -101,8 +102,8 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div)
     }
     set_bnd(n, NONE, div);
     set_bnd(n, NONE, p);
-
-    lin_solve(n, NONE, p, div, 1, 4);
+	
+    lin_solve(n, NONE, p, div, 1,0.25f );
 
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
