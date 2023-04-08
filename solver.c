@@ -43,7 +43,7 @@ static void set_bnd(unsigned int n, boundary b, float* x)
 }
 
 
-static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float a, float c)
+static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float a, float uoc)
 {
 	float x_aux;
     float err2;	
@@ -53,12 +53,12 @@ static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, flo
       for (unsigned int ipass=0,jsw=1;ipass<2;ipass++,jsw=3-jsw) { // Esto toma dos pares de valores (ipass,jsw)=(0,1)=(1,2) 
         for (int j=1, isw=jsw;j<=n;j++,isw=3-isw) {
           for (int i=isw;i<=n;i+=2) {
-	              x_aux=x[IX(i, j)];
+                x_aux=x[IX(i, j)];
   /*					printf("(%d,%d):  (%d,%d), (%d,%d), (%d,%d), (%d,%d) \n" ,i,j,i - 1, j,i + 1, j,i, j - 1,i, j + 1);*/
-                    x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) / c;
-                    err2 += ( x[IX(i, j)] - x_aux ) * ( x[IX(i, j)] - x_aux );
+                x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) *uoc;
+                err2 += ( x[IX(i, j)] - x_aux ) * ( x[IX(i, j)] - x_aux );
   /*					printf("(%d,%d):  %lf, %lf,%lf,%lf \n" ,i,j,x[IX(i - 1, j)],x[IX(i + 1, j)],x[IX(i, j - 1)],x[IX(i, j + 1)]);	                */
-		}        
+		  }        
 		}
 		}
         set_bnd(n, b, x);
@@ -79,7 +79,8 @@ static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, flo
 static void diffuse(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
 {
     float a = dt * diff * n * n;
-    lin_solve(n, b, x, x0, a, 1 + 4 * a);
+    float uoc = 1.f/(1.f + 4.f * a);
+    lin_solve(n, b, x, x0, a,uoc);
 }
 
 static void advect(unsigned int n, boundary b, float* d, const float* d0, const float* u, const float* v, float dt)
@@ -128,7 +129,7 @@ static void project(unsigned int size, unsigned int n, float* u, float* v, float
     set_bnd(n, NONE, p);
 	
 /*    printf("project");*/
-    lin_solve(n, NONE, p, div, 1, 4);
+    lin_solve(n, NONE, p, div, 1, 0.25f);
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
             u[IX(i, j)] -= 0.5f * n * (p[IX(i + 1, j)] - p[IX(i - 1, j)]);
