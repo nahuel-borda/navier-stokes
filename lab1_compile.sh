@@ -11,7 +11,7 @@ for i in "gcc" ; do
 	for j in "-O0"; do		
 		#Exporto los nombres de los compiladores y las opciones
 		export CC=$i
-		export CFLAGS="-std=c17 -Wall -Wextra ""$j"	#TODO Esto esta medio choto, como está escrito no hay que cambiar los espacios entre el ""
+		export CFLAGS="-std=c17 -Wall -Wextra -Ofast -march=native ""$j"	#TODO Esto esta medio choto, como está escrito no hay que cambiar los espacios entre el ""
 
 		echo ''
 		echo ''

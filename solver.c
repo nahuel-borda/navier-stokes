@@ -4,6 +4,7 @@
 #include "solver.h"
 #include <math.h>
 
+
 #define IX(i, j) ((j) + (n + 2) * (i))
 #define SWAP(x0, x)      \
     {                    \
@@ -48,15 +49,16 @@ static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, flo
     float err2;	
     
     for (unsigned int k = 0; k < 20; k++) {
-		
-        err2=0.0f;
-        for (unsigned int i = 1; i <= n; i++) {
-            for (unsigned int j = 1; j <= n; j++) {
-	            x_aux=x[IX(i, j)]; //guardo el valor anterior
-                x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) / c;
-                err2 += ( x[IX(i, j)] - x_aux ) * ( x[IX(i, j)] - x_aux );
-            }
-        }
+      err2=0.0f;
+      for (unsigned int ipass=0,jsw=1;ipass<2;ipass++,jsw=3-jsw) { // Esto toma dos pares de valores (ipass,jsw)=(0,1)=(1,2) 
+        for (int j=1,isw=jsw;j<=n;j++,isw=3-isw)
+          for (int i=isw;i<=n;i+=2)
+              x_aux=x[IX(i, j)];
+  /*					printf("(%d,%d):  (%d,%d), (%d,%d), (%d,%d), (%d,%d) \n" ,i,j,i - 1, j,i + 1, j,i, j - 1,i, j + 1);*/
+                    x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) / c;
+                    err2 += ( x[IX(i, j)] - x_aux ) * ( x[IX(i, j)] - x_aux );
+  /*					printf("(%d,%d):  %lf, %lf,%lf,%lf \n" ,i,j,x[IX(i - 1, j)],x[IX(i + 1, j)],x[IX(i, j - 1)],x[IX(i, j + 1)]);	                */
+		}        
         set_bnd(n, b, x);
 
 	    // De ver el resultado de esto que imprime en pantalla, norma^2=1e-8 luego de 20 iteraciones
@@ -69,6 +71,7 @@ static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, flo
         }
 
     }
+    
 }
 
 static void diffuse(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
