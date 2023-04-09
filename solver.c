@@ -52,7 +52,7 @@ static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, flo
       err2=0.0f;
       for (unsigned int ipass=0,jsw=1;ipass<2;ipass++,jsw=3-jsw) { // Esto toma dos pares de valores (ipass,jsw)=(0,1)=(1,2) 
         for (int j=1,isw=jsw;j<=n;j++,isw=3-isw){
-          for (int i=isw;i<=n;i+=2)
+          for (int i=isw;i<=n;i+=2){
               x_aux=x[IX(i, j)];
   /*					printf("(%d,%d):  (%d,%d), (%d,%d), (%d,%d), (%d,%d) \n" ,i,j,i - 1, j,i + 1, j,i, j - 1,i, j + 1);*/
                     x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) / c;
