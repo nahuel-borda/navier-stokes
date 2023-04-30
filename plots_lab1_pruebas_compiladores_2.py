@@ -12,7 +12,9 @@ legend=[]
 
 
 lista1=['gcc','icx','clang']
+
 lista2=["-O0", "-Ofast", "-march=native"]
+
 #lista2=["-O0", "-O1"]
 
 
@@ -60,6 +62,8 @@ for i in lista1:
 	#plt.show()
 
 	# guarda
+
 	filename="lab1_prueba_comps_v2_codigo_original_"+str(i)+".png"
+
 	plt.savefig(filename, bbox_inches='tight')
 	plt.close()
