@@ -11,10 +11,8 @@ import matplotlib.colors as mcolors	# para definir colores
 legend=[]
 
 
-lista1=['gcc','icx','clang']
-
-lista2=["-O0", "-Ofast", "-march=native"]
-
+lista1=['gcc', 'icx', 'clang']
+lista2=["-O0", "-march=native","-mavx2"]
 #lista2=["-O0", "-O1"]
 
 
@@ -53,7 +51,7 @@ for i in lista1:
 
 	## defino las leyendas
 	plt.title(str(i))
-	legend=["-O0", "-Ofast", "-Ofast -march=native"]
+	legend=["-O0", "-Ofast -march=native","-Ofast -march=native -xhost"]
 	labels = legend
 	handles = [plt.Rectangle((0,0),1,1, color=clr) for clr in colores]
 	plt.legend(handles, labels)
@@ -62,8 +60,6 @@ for i in lista1:
 	#plt.show()
 
 	# guarda
-
-	filename="lab1_prueba_comps_v2_codigo_original_"+str(i)+".png"
-
+	filename="lab1_prueba_comps_v6_codigo_original_"+str(i)+".png"
 	plt.savefig(filename, bbox_inches='tight')
 	plt.close()

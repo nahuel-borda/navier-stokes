@@ -7,12 +7,11 @@ Nruns=1 # Cantidad de ejecuciones para hacer los promedios de los ns_per_cell
 
 #TODO faltaría que el programa guarde algunos datos para después comparar (datos de salida para tests, y datos de metricas para comparar)
 
-for i in "gcc" ; do 
-	for j in "-Ofast -march=native"; do
-		
+for i in "gcc" ; do
+	for j in "-O0"; do		
 		#Exporto los nombres de los compiladores y las opciones
 		export CC=$i
-		export CFLAGS="-std=c17 -Wall -Wextra ""$j"	#TODO Esto esta medio choto, como está escrito no hay que cambiar los espacios entre el ""
+		export CFLAGS="-std=c17 -Wall -Wextra -Ofast -march=native ""$j"	#TODO Esto esta medio choto, como está escrito no hay que cambiar los espacios entre el ""
 
 		echo ''
 		echo ''
@@ -24,20 +23,13 @@ for i in "gcc" ; do
 		make
 
 		# Ejecuto headless
-		for n in $(eval echo "{1.."$Nruns"..1}"); do
-			# rm ....... # Borro archivos de datos anteriores
-			./${headless_name}
-			echo ''
-		done
+		#for n in $(eval echo "{1.."$Nruns"..1}"); do
+		#	# rm ....... # Borro archivos de datos anteriores
+		#	./${headless_name}
+		#	echo ''
+		#done
 		
 		
 	done
 	
 done
-
-
-
-
-
-
-
