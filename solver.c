@@ -1,8 +1,11 @@
 #include <stddef.h>
-
+#include <stdlib.h>
+#include <stdio.h>
 #include "solver.h"
+#include <math.h>
 
-#define IX(i, j) ((i) + (n + 2) * (j))
+
+#define IX(i, j) ((j) + (n + 2) * (i))
 #define SWAP(x0, x)      \
     {                    \
         float* tmp = x0; \
@@ -39,19 +42,41 @@ static void set_bnd(unsigned int n, boundary b, float* x)
     x[IX(n + 1, n + 1)] = 0.5f * (x[IX(n, n + 1)] + x[IX(n + 1, n)]);
 }
 
+
 static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float a, float c)
 {
+	float x_aux;
+    float err2;	
+    
     for (unsigned int k = 0; k < 20; k++) {
-        for (unsigned int i = 1; i <= n; i++) {
-            for (unsigned int j = 1; j <= n; j++) {
-                x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) / c;
-            }
-        }
+      err2=0.0f;
+      for (unsigned int ipass=0,jsw=1;ipass<2;ipass++,jsw=3-jsw) { // Esto toma dos pares de valores (ipass,jsw)=(0,1)=(1,2) 
+        for (int j=1,isw=jsw;j<=n;j++,isw=3-isw){
+          for (int i=isw;i<=n;i+=2){
+              x_aux=x[IX(i, j)];
+  /*					printf("(%d,%d):  (%d,%d), (%d,%d), (%d,%d), (%d,%d) \n" ,i,j,i - 1, j,i + 1, j,i, j - 1,i, j + 1);*/
+                    x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) / c;
+                    err2 += ( x[IX(i, j)] - x_aux ) * ( x[IX(i, j)] - x_aux );
+  /*					printf("(%d,%d):  %lf, %lf,%lf,%lf \n" ,i,j,x[IX(i - 1, j)],x[IX(i + 1, j)],x[IX(i, j - 1)],x[IX(i, j + 1)]);	                */
+		}
+		}
+		}
         set_bnd(n, b, x);
+
+	    // De ver el resultado de esto que imprime en pantalla, norma^2=1e-8 luego de 20 iteraciones
+        // dejé eps^2 en lugar de tomar sqrt() en norma. Porque supuestamente sqrt es caro?
+        // esta norma directamente no tiene en cuenta los bordes artificiales. 
+        // La seteo en 1e-10 para ser conservador con los cambios en los resultados. es decir eps=1e-5.
+        if ( err2 < 0.0000000001f ) {	
+/*		    printf("iteraciones: %i \n", k);*/
+	        return;
+        }
+
     }
+    
 }
 
-static void diffuse(unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
+static void diffuse(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
 {
     float a = dt * diff * n * n;
     lin_solve(n, b, x, x0, a, 1 + 4 * a);
@@ -91,7 +116,7 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
     set_bnd(n, b, d);
 }
 
-static void project(unsigned int n, float* u, float* v, float* p, float* div)
+static void project(unsigned int size, unsigned int n, float* u, float* v, float* p, float* div)
 {
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
@@ -101,9 +126,9 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div)
     }
     set_bnd(n, NONE, div);
     set_bnd(n, NONE, p);
-
+	
+/*    printf("project");*/
     lin_solve(n, NONE, p, div, 1, 4);
-
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
             u[IX(i, j)] -= 0.5f * n * (p[IX(i + 1, j)] - p[IX(i - 1, j)]);
@@ -116,25 +141,29 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div)
 
 void dens_step(unsigned int n, float* x, float* x0, float* u, float* v, float diff, float dt)
 {
+	float size = (n + 2) * (n + 2);	// TODO esto me gustaría que sea static
+	
     add_source(n, x, x0, dt);
     SWAP(x0, x);
-    diffuse(n, NONE, x, x0, diff, dt);
+    diffuse(size, n, NONE, x, x0, diff, dt);
     SWAP(x0, x);
     advect(n, NONE, x, x0, u, v, dt);
 }
 
 void vel_step(unsigned int n, float* u, float* v, float* u0, float* v0, float visc, float dt)
 {
+	float size = (n + 2) * (n + 2); // TODO esto me gustaría que sea static
+	
     add_source(n, u, u0, dt);
     add_source(n, v, v0, dt);
     SWAP(u0, u);
-    diffuse(n, VERTICAL, u, u0, visc, dt);
+    diffuse(size, n, VERTICAL, u, u0, visc, dt);
     SWAP(v0, v);
-    diffuse(n, HORIZONTAL, v, v0, visc, dt);
-    project(n, u, v, u0, v0);
+    diffuse(size, n, HORIZONTAL, v, v0, visc, dt);
+    project(size, n, u, v, u0, v0);
     SWAP(u0, u);
     SWAP(v0, v);
     advect(n, VERTICAL, u, u0, u0, v0, dt);
     advect(n, HORIZONTAL, v, v0, u0, v0, dt);
-    project(n, u, v, u0, v0);
+    project(size, n, u, v, u0, v0);
 }
