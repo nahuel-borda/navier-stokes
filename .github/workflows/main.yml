@@ -640,7 +640,7 @@ jobs:
         rm ssh_key
         python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "gcc" "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
     
-    - name: "intel clang -std=c17 -Wall -Wextra -O0 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "intel clang -std=c17 -Wall -Wextra -O0 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -651,11 +651,11 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "intel clang -std=c17 -Wall -Wextra -O1 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "intel clang -std=c17 -Wall -Wextra -O1 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -666,11 +666,11 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       
-    - name: "intel clang -std=c17 -Wall -Wextra -O2 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "intel clang -std=c17 -Wall -Wextra -O2 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -681,11 +681,11 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O2 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O2 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "intel clang -std=c17 -Wall -Wextra -O3 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "intel clang -std=c17 -Wall -Wextra -O3 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -696,11 +696,11 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O3 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O3 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "intel clang -std=c17 -Wall -Wextra -Ofast -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "intel clang -std=c17 -Wall -Wextra -Ofast -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -711,11 +711,11 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "intel clang -std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "intel clang -std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -726,11 +726,11 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "intel clang -std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "intel clang -std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -741,11 +741,11 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "intel clang -std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "intel clang -std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -756,11 +756,11 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "intel clang -std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "intel clang -std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -771,11 +771,11 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "intel clang -std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "intel clang -std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -786,11 +786,11 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "clang" "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "intel icc -std=c17 -Wall -Wextra -O0 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "intel icc -std=c17 -Wall -Wextra -O0 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
