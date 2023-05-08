@@ -45,15 +45,25 @@ static void set_bnd(unsigned int n, boundary b, float* x)
 
 static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float a, float uoc)
 {
+    int jsw;
     
     for (unsigned int k = 0; k < 20; k++) {
-      for (unsigned int ipass=0,jsw=1;ipass<2;ipass++,jsw=3-jsw) { // Esto toma dos pares de valores (ipass,jsw)=(0,1)=(1,2) 
-        for (int j=1, isw=jsw;j<=n;j++,isw=3-isw) {
-          for (int i=isw;i<=n;i+=2) {
+
+	    	jsw=1;
+        for (unsigned int j=1, isw=jsw;j<=n;j++,isw=3-isw) {
+          for (unsigned int i=isw;i<=n;i+=2) {
                 x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) *uoc;
-		}        
-		}
-		}
+					}        
+				}
+		
+	    	jsw=2;
+        for (unsigned int j=1, isw=jsw;j<=n;j++,isw=3-isw) {
+          for (unsigned int i=isw;i<=n;i+=2) {
+                x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) *uoc;
+					}        
+				}
+		
+
         set_bnd(n, b, x);
 
     }
