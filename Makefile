@@ -1,13 +1,7 @@
-#Compilers
-#CC=gcc #Esto se modifica desde el script en bash
-
-#Flags
-#CFLAGS=-std=c11 -Wall -Wextra -Wno-unused-parameter  #Esto se modifica desde el script en bash
-
 LDFLAGS=
 
 
-TARGETS=demo headless
+TARGETS=headless #demo
 SOURCES=$(shell echo *.c)
 COMMON_OBJECTS=solver.o wtime.o
 
