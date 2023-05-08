@@ -173,7 +173,7 @@ jobs:
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
     
-    - name: "amd clang -std=c17 -Wall -Wextra -O0 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd clang -std=c17 -Wall -Wextra -O0 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -184,11 +184,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd clang -std=c17 -Wall -Wextra -O1 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd clang -std=c17 -Wall -Wextra -O1 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -199,11 +199,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd clang -std=c17 -Wall -Wextra -O2 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd clang -std=c17 -Wall -Wextra -O2 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -218,7 +218,7 @@ jobs:
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O2 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd clang -std=c17 -Wall -Wextra -O3 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd clang -std=c17 -Wall -Wextra -O3 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -229,11 +229,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -ftree-vectorize --Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O3 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O3 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
     
-    - name: "amd clang -std=c17 -Wall -Wextra -Ofast -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd clang -std=c17 -Wall -Wextra -Ofast -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -244,12 +244,12 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
 
-    - name: "amd clang -std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd clang -std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -260,12 +260,12 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize-ffast-math -funsafe-math-optimizations"
 
 
-    - name: "amd clang -std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd clang -std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -276,11 +276,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd clang -std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd clang -std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -291,11 +291,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd clang -std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd clang -std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -306,11 +306,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
     
-    - name: "amd clang -std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd clang -std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -321,11 +321,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd aocc -std=c17 -Wall -Wextra -O0 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd aocc -std=c17 -Wall -Wextra -O0 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -336,11 +336,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O0 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd aocc -std=c17 -Wall -Wextra -O1 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd aocc -std=c17 -Wall -Wextra -O1 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize-ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -351,11 +351,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O1 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd aocc -std=c17 -Wall -Wextra -O2 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd aocc -std=c17 -Wall -Wextra -O2 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -366,11 +366,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O2 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O2 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd aocc -std=c17 -Wall -Wextra -O3 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd aocc -std=c17 -Wall -Wextra -O3 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -381,11 +381,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O3 -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O3 -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
     
-    - name: "amd aocc -std=c17 -Wall -Wextra -Ofast -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd aocc -std=c17 -Wall -Wextra -Ofast -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -396,11 +396,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd aocc -std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd aocc -std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -411,11 +411,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O0 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd aocc -std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd aocc -std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -426,11 +426,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O1 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd aocc -std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd aocc -std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -441,11 +441,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O2 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
-    - name: "amd aocc -std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd aocc -std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -456,11 +456,11 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -O3 -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
     
-    - name: "amd aocc -std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+    - name: "amd aocc -std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -471,9 +471,9 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -fopt-info-vec -fopt-info-vec-missed -ffast-math -funsafe-math-optimizations"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast -march=native -ftree-vectorize -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations"
 
   collect_metrics_zx81:
     runs-on: ubuntu-latest

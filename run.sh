@@ -13,8 +13,16 @@ rm -f out.txt
 
 make headless >vectorization_report.txt 2>&1
 
-grep -c "optimized" vectorization_report.txt | xargs -I {} echo "{};;total_vectorizations;" >> vect_output.txt
-grep -c "missed" vectorization_report.txt | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
+if [ $CC == 'clang' ]; then
+  cat vectorization_report.txt | sort --unique | grep -c 'vectorization width' | xargs -I {} echo "{};;total_vectorizations;" >> vect_output.txt
+  cat vectorization_report.txt | sort --unique | grep -c 'pass-missed' | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
+elif [ $CC == 'aocc' ]; then
+  cat vectorization_report.txt | sort --unique | grep -c 'vectorization width' | xargs -I {} echo "{};;total_vectorizations;" >> vect_output.txt
+  cat vectorization_report.txt | sort --unique | grep -c 'pass-missed' | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
+else
+  grep -c "optimized" vectorization_report.txt | xargs -I {} echo "{};;total_vectorizations;" >> vect_output.txt
+  grep -c "missed" vectorization_report.txt | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
+fi
 
 perf stat -r 10 -x ';' -o output.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time,cache-misses ./headless >/dev/null 2>&1
 python3 mean_outputs.py output.txt 
