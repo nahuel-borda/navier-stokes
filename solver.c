@@ -45,32 +45,16 @@ static void set_bnd(unsigned int n, boundary b, float* x)
 
 static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float a, float uoc)
 {
-	float x_aux;
-    float err2;	
     
     for (unsigned int k = 0; k < 20; k++) {
-      err2=0.0f;
       for (unsigned int ipass=0,jsw=1;ipass<2;ipass++,jsw=3-jsw) { // Esto toma dos pares de valores (ipass,jsw)=(0,1)=(1,2) 
         for (int j=1, isw=jsw;j<=n;j++,isw=3-isw) {
           for (int i=isw;i<=n;i+=2) {
-                x_aux=x[IX(i, j)];
-  /*					printf("(%d,%d):  (%d,%d), (%d,%d), (%d,%d), (%d,%d) \n" ,i,j,i - 1, j,i + 1, j,i, j - 1,i, j + 1);*/
                 x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) *uoc;
-                err2 += ( x[IX(i, j)] - x_aux ) * ( x[IX(i, j)] - x_aux );
-  /*					printf("(%d,%d):  %lf, %lf,%lf,%lf \n" ,i,j,x[IX(i - 1, j)],x[IX(i + 1, j)],x[IX(i, j - 1)],x[IX(i, j + 1)]);	                */
-		  }        
+		}        
 		}
 		}
         set_bnd(n, b, x);
-
-	    // De ver el resultado de esto que imprime en pantalla, norma^2=1e-8 luego de 20 iteraciones
-        // dejé eps^2 en lugar de tomar sqrt() en norma. Porque supuestamente sqrt es caro?
-        // esta norma directamente no tiene en cuenta los bordes artificiales. 
-        // La seteo en 1e-10 para ser conservador con los cambios en los resultados. es decir eps=1e-5.
-        if ( err2 < 0.0000000001f ) {	
-/*		    printf("iteraciones: %i \n", k);*/
-	        return;
-        }
 
     }
     
