@@ -10,8 +10,9 @@ rm -f ./headless.dat
 rm -f vect_output.txt
 rm -f output.txt
 rm -f out.txt
+rm -f headless.optrpt
 
-make headless >vectorization_report.txt 2>&1
+make all >vectorization_report.txt 2>&1
 
 if [ $CC == 'clang' ]; then
   cat vectorization_report.txt | sort --unique | grep -c 'vectorization width' | xargs -I {} echo "{};;total_vectorizations;" >> vect_output.txt
@@ -19,6 +20,9 @@ if [ $CC == 'clang' ]; then
 elif [ $CC == 'aocc' ]; then
   cat vectorization_report.txt | sort --unique | grep -c 'vectorization width' | xargs -I {} echo "{};;total_vectorizations;" >> vect_output.txt
   cat vectorization_report.txt | sort --unique | grep -c 'pass-missed' | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
+elif [ $CC == 'icc' ]; then
+  cat headless.optrpt | sort --unique | grep -c 'WAS VECTORIZED' | xargs -I {} echo "{};;total_vectorizations;" >> vect_output.txt
+  cat headless.optrpt | sort --unique | grep -c 'not vectorized' | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
 else
   grep -c "optimized" vectorization_report.txt | xargs -I {} echo "{};;total_vectorizations;" >> vect_output.txt
   grep -c "missed" vectorization_report.txt | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
