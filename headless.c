@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "indices.h"
 #include "wtime.h"
 #include <string.h> // Para usar strcat
 
