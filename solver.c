@@ -7,7 +7,8 @@
 #include <math.h>
 
 
-#define IX(i, j) ((j) + (n + 2) * (i))
+//#define IX(i, j) ((j) + (n + 2) * (i))
+#define IX(x,y) (rb_idx((x),(y),(n+2)))
 #define SWAP(x0, x)      \
     {                    \
         float* tmp = x0; \
@@ -49,7 +50,7 @@ static void set_bnd(unsigned int n, boundary b, float* x)
 static void lin_solve_rb_step(grid_color color,
                               unsigned int n,
                               float a,
-                              float c,
+                              float uoc,
                               const float * restrict same0,
                               const float * restrict neigh,
                               float * restrict same)
@@ -65,7 +66,7 @@ static void lin_solve_rb_step(grid_color color,
             same[index] = (same0[index] + a * (neigh[index - width] +
                                                neigh[index] +
                                                neigh[index + shift] +
-                                               neigh[index + width])) / c;
+                                               neigh[index + width])) * uoc;
         }
     }
 }
@@ -73,7 +74,7 @@ static void lin_solve_rb_step(grid_color color,
 static void lin_solve(unsigned int n, boundary b,
                       float * restrict x,
                       const float * restrict x0,
-                      float a, float c)
+                      float a, float uoc)
 {
     unsigned int color_size = (n + 2) * ((n + 2) / 2);
     const float * red0 = x0;
@@ -82,14 +83,14 @@ static void lin_solve(unsigned int n, boundary b,
     float * blk = x + color_size;
 
     for (unsigned int k = 0; k < 20; ++k) {
-        lin_solve_rb_step(RED,   n, a, c, red0, blk, red);
-        lin_solve_rb_step(BLACK, n, a, c, blk0, red, blk);
+        lin_solve_rb_step(RED,   n, a, uoc, red0, blk, red);
+        lin_solve_rb_step(BLACK, n, a, uoc, blk0, red, blk);
         set_bnd(n, b, x);
     }
 }
 
 
-static void diffuse(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
+static void diffuse(unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
 {
     float a = dt * diff * n * n;
     float uoc = 1.f/(1.f + 4.f * a);
@@ -130,7 +131,7 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
     set_bnd(n, b, d);
 }
 
-static void project(unsigned int size, unsigned int n, float* u, float* v, float* p, float* div)
+static void project(unsigned int n, float* u, float* v, float* p, float* div)
 {
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
@@ -155,29 +156,27 @@ static void project(unsigned int size, unsigned int n, float* u, float* v, float
 
 void dens_step(unsigned int n, float* x, float* x0, float* u, float* v, float diff, float dt)
 {
-	float size = (n + 2) * (n + 2);	// TODO esto me gustaría que sea static
 	
     add_source(n, x, x0, dt);
     SWAP(x0, x);
-    diffuse(size, n, NONE, x, x0, diff, dt);
+    diffuse(n, NONE, x, x0, diff, dt);
     SWAP(x0, x);
     advect(n, NONE, x, x0, u, v, dt);
 }
 
 void vel_step(unsigned int n, float* u, float* v, float* u0, float* v0, float visc, float dt)
 {
-	float size = (n + 2) * (n + 2); // TODO esto me gustaría que sea static
 	
     add_source(n, u, u0, dt);
     add_source(n, v, v0, dt);
     SWAP(u0, u);
-    diffuse(size, n, VERTICAL, u, u0, visc, dt);
+    diffuse(n, VERTICAL, u, u0, visc, dt);
     SWAP(v0, v);
-    diffuse(size, n, HORIZONTAL, v, v0, visc, dt);
-    project(size, n, u, v, u0, v0);
+    diffuse(n, HORIZONTAL, v, v0, visc, dt);
+    project(n, u, v, u0, v0);
     SWAP(u0, u);
     SWAP(v0, v);
     advect(n, VERTICAL, u, u0, u0, v0, dt);
     advect(n, HORIZONTAL, v, v0, u0, v0, dt);
-    project(size, n, u, v, u0, v0);
+    project(n, u, v, u0, v0);
 }

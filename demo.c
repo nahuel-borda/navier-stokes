@@ -14,16 +14,18 @@
   =======================================================================
 */
 
-#include <GL/glut.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <GL/glut.h>
 
+#include "indices.h"
 #include "solver.h"
 #include "wtime.h"
 
 /* macros */
 
-#define IX(i, j) ((j) + (N + 2) * (i))
+//#define IX(i, j) ((j) + (N + 2) * (i))
+#define IX(x,y) (rb_idx((x),(y),(N+2)))
 
 /* global variables */
 
