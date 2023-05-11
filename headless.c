@@ -17,14 +17,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "indices.h"
 #include "wtime.h"
 #include <string.h> // Para usar strcat
 
 /* macros */
 
-#define IX(i, j) ((j) + (N + 2) * (i)) //TODO esto se va a llamar muchísimo, esto no es un ejemplo de donde conviene usar inlining?
+//#define IX(i, j) ((j) + (N + 2) * (i)) //TODO esto se va a llamar muchísimo, esto no es un ejemplo de donde conviene usar inlining?
 //TODO en esta función el índice menos significativo es i. Eso quiere decir que después en los arrays el loop externo debería
 // ser sobre j, y el loop interior sobre i. Pero en solver.c todos los loops están escritos al revés. O lo estoy viendo al revés yo?
+#define IX(x,y) (rb_idx((x),(y),(N+2)))
 
 /* external definitions (from solver.c) */
 

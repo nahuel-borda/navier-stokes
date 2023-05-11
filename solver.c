@@ -1,11 +1,14 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "solver.h"
+#include "indices.h"
 #include <math.h>
 
 
-#define IX(i, j) ((j) + (n + 2) * (i))
+//#define IX(i, j) ((j) + (n + 2) * (i))
+#define IX(x,y) (rb_idx((x),(y),(n+2)))
 #define SWAP(x0, x)      \
     {                    \
         float* tmp = x0; \
@@ -16,6 +19,7 @@
 typedef enum { NONE = 0,
                VERTICAL = 1,
                HORIZONTAL = 2 } boundary;
+typedef enum { RED, BLACK } grid_color;
 
 static void add_source(unsigned int n, float* x, const float* s, float dt)
 {
@@ -43,32 +47,48 @@ static void set_bnd(unsigned int n, boundary b, float* x)
 }
 
 
-static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float a, float uoc)
+static void lin_solve_rb_step(grid_color color,
+                              unsigned int n,
+                              float a,
+                              float uoc,
+                              const float * restrict same0,
+                              const float * restrict neigh,
+                              float * restrict same)
 {
-	float x_aux;	
-    
-    for (unsigned int k = 0; k < 20; k++) {
-      for (unsigned int ipass=0,jsw=1;ipass<2;ipass++,jsw=3-jsw) { // Esto toma dos pares de valores (ipass,jsw)=(0,1)=(1,2) 
-        for (int j=1, isw=jsw;j<=n;j++,isw=3-isw) {
-          for (int i=isw;i<=n;i+=2) {
-                x_aux=x[IX(i, j)];
-  /*					printf("(%d,%d):  (%d,%d), (%d,%d), (%d,%d), (%d,%d) \n" ,i,j,i - 1, j,i + 1, j,i, j - 1,i, j + 1);*/
-                x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) *uoc;
-                
-  /*					printf("(%d,%d):  %lf, %lf,%lf,%lf \n" ,i,j,x[IX(i - 1, j)],x[IX(i + 1, j)],x[IX(i, j - 1)],x[IX(i, j + 1)]);	                */
-		  }        
-		}
-		}
-        set_bnd(n, b, x);
+    int shift = color == RED ? 1 : -1;
+    unsigned int start = color == RED ? 0 : 1;
 
-	    // De ver el resultado de esto que imprime en pantalla, norma^2=1e-8 luego de 20 iteraciones
-        // dejé eps^2 en lugar de tomar sqrt() en norma. Porque supuestamente sqrt es caro?
-        // esta norma directamente no tiene en cuenta los bordes artificiales. 
-        // La seteo en 1e-10 para ser conservador con los cambios en los resultados. es decir eps=1e-5.
+    unsigned int width = (n + 2) / 2;
 
+    for (unsigned int y = 1; y <= n; ++y, shift = -shift, start = 1 - start) {
+        for (unsigned int x = start; x < width - (1 - start); ++x) {
+            int index = idx(x, y, width);
+            same[index] = (same0[index] + a * (neigh[index - width] +
+                                               neigh[index] +
+                                               neigh[index + shift] +
+                                               neigh[index + width])) * uoc;
+        }
     }
-    
 }
+
+static void lin_solve(unsigned int n, boundary b,
+                      float * restrict x,
+                      const float * restrict x0,
+                      float a, float uoc)
+{
+    unsigned int color_size = (n + 2) * ((n + 2) / 2);
+    const float * red0 = x0;
+    const float * blk0 = x0 + color_size;
+    float * red = x;
+    float * blk = x + color_size;
+
+    for (unsigned int k = 0; k < 20; ++k) {
+        lin_solve_rb_step(RED,   n, a, uoc, red0, blk, red);
+        lin_solve_rb_step(BLACK, n, a, uoc, blk0, red, blk);
+        set_bnd(n, b, x);
+    }
+}
+
 
 static void diffuse(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
 {
