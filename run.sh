@@ -31,7 +31,14 @@ else
   grep -c "missed" vectorization_report.txt | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
 fi
 
-perf stat -r 10 -x ';' -o output.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time,cache-misses ./headless >/dev/null 2>&1
-python3 mean_outputs.py output.txt 
+
+if [ $# == 2 ]; then
+	perf stat -r 10 -x ';' -o output.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time,cache-misses ./headless >/dev/null 2>&1
+	python3 mean_outputs.py output.txt
+elif [ $# == 3 ]; then
+	perf stat -r 10 -x ';' -o output.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time,cache-misses ./headless $3 0.1 0 0 5 100 >/dev/null 2>&1
+	python3 mean_outputs.py output.txt
+fi
+
 cat output.txt vect_output.txt > out.txt
 cat out.txt
