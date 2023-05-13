@@ -50,6 +50,6 @@ with open(sys.argv[1], 'r') as f:
 
 # write the performance metrics to the Google Sheet
 
-row = [commit_hash, commit_name,ba_datetime, architecture, compiler, compilation_flags, grid_size] + values
+row = [commit_hash, commit_name,ba_datetime, architecture, compiler, compilation_flags] + values + [grid_size]
 
 sheet.append_row(row)
