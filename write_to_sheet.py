@@ -35,6 +35,7 @@ commit_name = sys.argv[4]
 architecture = sys.argv[5]
 compiler = sys.argv[6]
 compilation_flags = sys.argv[7]
+grid_size=sys.argv[8]
 
 # authorize the credentials and open the Google Sheet
 client = gspread.authorize(creds)
@@ -49,6 +50,6 @@ with open(sys.argv[1], 'r') as f:
 
 # write the performance metrics to the Google Sheet
 
-row = [commit_hash, commit_name,ba_datetime, architecture, compiler, compilation_flags] + values
+row = [commit_hash, commit_name,ba_datetime, architecture, compiler, compilation_flags, grid_size] + values
 
 sheet.append_row(row)
