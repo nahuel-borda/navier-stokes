@@ -1,4 +1,4 @@
-name: Collect Performance Metrics
+name: Collect Performance Metrics Scaling
 
 on:
   workflow_dispatch:
