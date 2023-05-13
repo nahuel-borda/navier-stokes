@@ -599,7 +599,7 @@ jobs:
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "icc" "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -fno-tree-vectorize -qopt-report=2 -qopt-report-phase=vec"                 
         
         
-    - name: "amd icc -std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -ftree-vectorization -qopt-report=2 -qopt-report-phase=vec"
+    - name: "amd icc -std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations  -qopt-report=2 -qopt-report-phase=vec"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -610,9 +610,9 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1;  bash run.sh icc "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -ftree-vectorization -qopt-report=2 -qopt-report-phase=vec"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1;  bash run.sh icc "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -qopt-report=2 -qopt-report-phase=vec"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "icc" "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -ftree-vectorization -qopt-report=2 -qopt-report-phase=vec" 
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "icc" "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -qopt-report=2 -qopt-report-phase=vec" 
 
 
     - name: "amd icx -std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -fno-tree-vectorization -qopt-report=2 -qopt-report-phase=vec"
@@ -631,7 +631,7 @@ jobs:
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "icx" "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -fno-tree-vectorization -qopt-report=2 -qopt-report-phase=vec"
         
         
-    - name: "amd icx -std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -ftree-vectorization -qopt-report=2 -qopt-report-phase=vec"
+    - name: "amd icx -std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -qopt-report=2 -qopt-report-phase=vec"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -642,9 +642,9 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1;  bash run.sh icx "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -ftree-vectorization -qopt-report=2 -qopt-report-phase=vec"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1;  bash run.sh icx "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -qopt-report=2 -qopt-report-phase=vec"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "icx" "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -ftree-vectorization -qopt-report=2 -qopt-report-phase=vec"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "icx" "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -qopt-report=2 -qopt-report-phase=vec"
         
         
         
@@ -1254,7 +1254,7 @@ jobs:
         python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icc" "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -ftree-vectorization -qopt-report=2 -qopt-report-phase=vec" 
 
 
-    - name: "intel icx -std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -fno-tree-vectorization -qopt-report=2 -qopt-report-phase=vec"
+    - name: "intel icx -std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -no-vec -qopt-report=2 -qopt-report-phase=vec"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -1265,12 +1265,12 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1;  bash run.sh icx "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -fno-tree-vectorization -qopt-report=2 -qopt-report-phase=vec"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1;  bash run.sh icx "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -no-vec -qopt-report=2 -qopt-report-phase=vec"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icx" "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -fno-tree-vectorization -qopt-report=2 -qopt-report-phase=vec"                 
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icx" "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -no-vec -qopt-report=2 -qopt-report-phase=vec"                 
         
         
-    - name: "intel icx -std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -ftree-vectorization -qopt-report=2 -qopt-report-phase=vec"
+    - name: "intel icx -std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -qopt-report=2 -qopt-report-phase=vec -xCORE-AVX2"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -1281,6 +1281,6 @@ jobs:
         ssh-keyscan -H zx81.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1;  bash run.sh icx "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -ftree-vectorization -qopt-report=2 -qopt-report-phase=vec"' > output_intel.txt
+        ssh -i ssh_key cp202303@zx81.famaf.unc.edu.ar 'cd /home/cp2023/cp202303/navier-stokes/; source /opt/intel/oneapi/setvars.sh >/dev/null 2>&1;  bash run.sh icx "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -qopt-report=2 -qopt-report-phase=vec -xCORE-AVX2"' > output_intel.txt
         rm ssh_key
-        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icx" "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations -ftree-vectorization -qopt-report=2 -qopt-report-phase=vec"
+        python write_to_sheet.py output_intel.txt $pkpass $GITHUB_SHA "n/d" "intel" "icx" "-std=c99 -Wall -Wextra -Ofast -march=native -ffast-math -funsafe-math-optimizations  -qopt-report=2 -qopt-report-phase=vec -xCORE-AVX2"

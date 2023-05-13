@@ -23,6 +23,9 @@ elif [ $CC == 'aocc' ]; then
 elif [ $CC == 'icc' ]; then
   cat headless.optrpt | sort --unique | grep -c 'WAS VECTORIZED' | xargs -I {} echo "{};;total_vectorizations;" >> vect_output.txt
   cat headless.optrpt | sort --unique | grep -c 'not vectorized' | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
+elif [ $CC == 'icx' ]; then
+  cat headless.optrpt | sort --unique | grep -c 'WAS VECTORIZED' | xargs -I {} echo "{};;total_vectorizations;" >> vect_output.txt
+  cat headless.optrpt | sort --unique | grep -c 'not vectorized' | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
 else
   grep -c "optimized" vectorization_report.txt | xargs -I {} echo "{};;total_vectorizations;" >> vect_output.txt
   grep -c "missed" vectorization_report.txt | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
