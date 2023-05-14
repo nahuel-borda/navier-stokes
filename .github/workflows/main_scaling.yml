@@ -34,9 +34,9 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=2" "2056" ' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=2" "2048" ' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=2"  "2056"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=2"  "2048"
         
     - name: "amd aocc -std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=4"
       env:
@@ -49,9 +49,9 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=4" "2056" ' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=4" "2048" ' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=4" "2056"     
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=4" "2048"     
         
         
     - name: "amd aocc -std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=8"
@@ -65,8 +65,8 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=8" "2056" ' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; source /opt/AMD/aocc-compiler-4.0.0/setenv_AOCC.sh >/dev/null 2>&1; bash run.sh clang "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=8" "2048" ' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=8"  "2056"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "aocc" "-std=c17 -Wall -Wextra -Ofast -march=native -Rpass=vectorize -Rpass-missed=vectorize -ffast-math -funsafe-math-optimizations -ftree-vectorize  -mllvm -force-vector-width=8"  "2048"
 
 
