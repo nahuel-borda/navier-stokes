@@ -47,22 +47,25 @@ static void set_bnd(unsigned int n, boundary b, float* x)
 }
 
 
-static void lin_solve_rb_step(grid_color color,
+static void lin_solve_rb_step(grid_color color,				
                               unsigned int n,
                               float a,
                               float uoc,
-                              const float * restrict same0,
-                              const float * restrict neigh,
-                              float * restrict same)
+                              const float * restrict same0,	// la grilla actual sin actualizar
+                              const float * restrict neigh,	// la grilla de los vecinos
+                              float * restrict same)		// la grilla actual actualizada
 {
     int shift = color == RED ? 1 : -1;
     unsigned int start = color == RED ? 0 : 1;
 
     unsigned int width = (n + 2) / 2;
 
+	unsigned int x;
+	int index;
     for (unsigned int y = 1; y <= n; ++y, shift = -shift, start = 1 - start) {
-        for (unsigned int x = start; x < width - (1 - start); ++x) {
-            int index = idx(x, y, width);
+    	#pragma omp parallel for shared(start,shift,width,y,same,same0,neigh,a,uoc) private(x,index) default(none) 
+        for (x = start; x < width - (1 - start); ++x) {
+            index = idx(x, y, width);
             same[index] = (same0[index] + a * (neigh[index - width] +
                                                neigh[index] +
                                                neigh[index + shift] +
