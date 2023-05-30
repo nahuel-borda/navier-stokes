@@ -63,7 +63,7 @@ static void lin_solve_rb_step(grid_color color,
 	unsigned int x;
 	int index;
     for (unsigned int y = 1; y <= n; ++y, shift = -shift, start = 1 - start) {
-    	#pragma omp parallel for shared(start,shift,width,y,same,same0,neigh,a,uoc) private(x,index) default(none) 
+    	//#pragma omp parallel for shared(start,shift,width,y,same,same0,neigh,a,uoc) private(x,index) default(none) 
         for (x = start; x < width - (1 - start); ++x) {
             index = idx(x, y, width);
             same[index] = (same0[index] + a * (neigh[index - width] +
@@ -85,7 +85,9 @@ static void lin_solve(unsigned int n, boundary b,
     float * red = x;
     float * blk = x + color_size;
 
-    for (unsigned int k = 0; k < 20; ++k) {
+    unsigned int k;
+    #pragma omp parallel for shared(n,a,b,uoc,red0,blk0,blk,red,x) private(k) default(none)
+    for (k = 0; k < 20; ++k) {
         lin_solve_rb_step(RED,   n, a, uoc, red0, blk, red);
         lin_solve_rb_step(BLACK, n, a, uoc, blk0, red, blk);
         set_bnd(n, b, x);
