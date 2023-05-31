@@ -46,6 +46,37 @@ static void set_bnd(unsigned int n, boundary b, float* x)
     x[IX(n + 1, n + 1)] = 0.5f * (x[IX(n, n + 1)] + x[IX(n + 1, n)]);
 }
 
+//                              
+
+static void update_block(grid_color color,				
+                              unsigned int n,								// grid size
+                              float a,
+                              float uoc,
+                              const float * restrict same0,	// la grilla actual sin actualizar
+                              const float * restrict neigh,	// la grilla de los vecinos
+                              float * restrict same,				// la grilla actual actualizada
+                              unsigned int ib,							// block index
+                              unsigned int jb,							// block index
+                              unsigned int Sb								// block size
+                              )
+{
+    int shift = color == RED ? 1 : -1;
+    unsigned int start = color == RED ? 0 : 1;
+    unsigned int width = (n + 2) / 2;
+    unsigned int widthB = (Sb) / 2;
+
+		for (unsigned int  y = 1+ib; y <= Sb+ib; ++y, shift = -shift, start = 1 - start) {
+			  for (unsigned int x = (start+jb); x < (widthB+jb) - (1 - start); ++x) {
+			      int index = idx(x, y, width);
+			      same[index] = (same0[index] + a * (neigh[index - width] +
+			                                         neigh[index] +
+			                                         neigh[index + shift] +
+			                                         neigh[index + width])) * uoc;
+			  }
+		}
+
+
+}
 
 static void lin_solve_rb_step(grid_color color,				
                               unsigned int n,
@@ -58,8 +89,9 @@ static void lin_solve_rb_step(grid_color color,
     int shift = color == RED ? 1 : -1;
     unsigned int start = color == RED ? 0 : 1;
 
-    unsigned int width = (n + 2) / 2;
+		int Sb=16; //block size
 
+<<<<<<< HEAD
 	unsigned int x;
 	int index;
     for (unsigned int y = 1; y <= n; ++y, shift = -shift, start = 1 - start) {
@@ -72,6 +104,15 @@ static void lin_solve_rb_step(grid_color color,
                                                neigh[index + width])) * uoc;
         }
     }
+=======
+		//#pragma omp parallel for shared(Sb,n,width,a,uoc) private(same,same0,neigh,ib,y,shift,start,x,index) default(none) 
+		//Una vez que ande, acá voy a querer poner el pragma, para que le toque un bloque a cada core.
+		for (int ib = 0; ib < n; ib += Sb) { 
+			for (int jb = 0; jb < n; jb += Sb) { 
+				update_block(color, n, a, uoc, same0, neigh, same,ib,jb,Sb);
+			}
+		}
+>>>>>>> 0c4b4e4 (intento dividir el gauss_seidel en iteraciones sobre bloques)
 }
 
 static void lin_solve(unsigned int n, boundary b,
