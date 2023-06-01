@@ -63,7 +63,6 @@ static void update_block(grid_color color,
     int shift = color == RED ? 1 : -1;
     unsigned int start = color == RED ? 0 : 1;
     unsigned int width = (n + 2) / 2;
-    unsigned int widthB = (Sb +2 ) / 2;
 
 		for (unsigned int  y = 1+ib; y <= Sb+ib; ++y, shift = -shift, start = 1 - start) {
 			  for (unsigned int x = (start+jb); x <= (Sb+jb) - (1 - start); ++x) {
@@ -86,17 +85,11 @@ static void lin_solve_rb_step(grid_color color,
                               const float * restrict neigh,	// la grilla de los vecinos
                               float * restrict same)		// la grilla actual actualizada
 {
-    int shift = color == RED ? 1 : -1;
-    unsigned int start = color == RED ? 0 : 1;
-    
-    unsigned int width = (n + 2) / 2;
-
 		int Sb=16; //block size
-
-		//#pragma omp parallel for shared(Sb,n,width,a,uoc) private(same,same0,neigh,ib,y,shift,start,x,index) default(none) 
-		//Una vez que ande, acá voy a querer poner el pragma, para que le toque un bloque a cada core.
-		for (int ib = 0; ib < n; ib += Sb) { 
-			for (int jb = 0; jb < n/2; jb += Sb) { 
+		int ib, jb;
+		#pragma omp parallel for shared(same,same0,neigh,Sb,n,a,uoc,color) private(ib,jb) default(none) 		
+		for (ib = 0; ib < n; ib += Sb) { 
+			for (jb = 0; jb < n/2; jb += Sb) { 
 				update_block(color, n, a, uoc, same0, neigh, same,ib,jb,Sb);
 			}
 		}
@@ -121,7 +114,7 @@ static void lin_solve(unsigned int n, boundary b,
 }
 
 
-static void diffuse(unsigned int size, unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
+static void diffuse(unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
 {
     float a = dt * diff * n * n;
     float uoc = 1.f/(1.f + 4.f * a);
@@ -162,7 +155,7 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
     set_bnd(n, b, d);
 }
 
-static void project(unsigned int size, unsigned int n, float* u, float* v, float* p, float* div)
+static void project(unsigned int n, float* u, float* v, float* p, float* div)
 {
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
@@ -187,29 +180,25 @@ static void project(unsigned int size, unsigned int n, float* u, float* v, float
 
 void dens_step(unsigned int n, float* x, float* x0, float* u, float* v, float diff, float dt)
 {
-	float size = (n + 2) * (n + 2);	// TODO esto me gustaría que sea static
-	
     add_source(n, x, x0, dt);
     SWAP(x0, x);
-    diffuse(size, n, NONE, x, x0, diff, dt);
+    diffuse(n, NONE, x, x0, diff, dt);
     SWAP(x0, x);
     advect(n, NONE, x, x0, u, v, dt);
 }
 
 void vel_step(unsigned int n, float* u, float* v, float* u0, float* v0, float visc, float dt)
 {
-	float size = (n + 2) * (n + 2); // TODO esto me gustaría que sea static
-	
     add_source(n, u, u0, dt);
     add_source(n, v, v0, dt);
     SWAP(u0, u);
-    diffuse(size, n, VERTICAL, u, u0, visc, dt);
+    diffuse(n, VERTICAL, u, u0, visc, dt);
     SWAP(v0, v);
-    diffuse(size, n, HORIZONTAL, v, v0, visc, dt);
-    project(size, n, u, v, u0, v0);
+    diffuse(n, HORIZONTAL, v, v0, visc, dt);
+    project(n, u, v, u0, v0);
     SWAP(u0, u);
     SWAP(v0, v);
     advect(n, VERTICAL, u, u0, u0, v0, dt);
     advect(n, HORIZONTAL, v, v0, u0, v0, dt);
-    project(size, n, u, v, u0, v0);
+    project(n, u, v, u0, v0);
 }
