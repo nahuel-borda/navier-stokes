@@ -66,7 +66,6 @@ static void update_block(grid_color color,
 
 		for (unsigned int  y = 1+ib; y <= Sb+ib; ++y, shift = -shift, start = 1 - start) {
 			  for (unsigned int x = (start+jb); x <= (Sb+jb) - (1 - start); ++x) {
-			  		printf("%i %i \n",x,y);
 			      int index = idx(x, y, width);
 			      same[index] = (same0[index] + a * (neigh[index - width] +
 			                                         neigh[index] +
@@ -91,7 +90,6 @@ static void lin_solve_rb_step(grid_color color,
 		#pragma omp parallel for shared(same,same0,neigh,Sb,n,a,uoc,color) private(ib,jb) default(none) 		
 		for (ib = 0; ib < n; ib += Sb) { 
 			for (jb = 0; jb < n/2; jb += Sb) { 
-				printf("indices: %i %i \n",ib,jb);
 				update_block(color, n, a, uoc, same0, neigh, same,ib,jb,Sb);
 			}
 		}
