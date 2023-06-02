@@ -5,7 +5,7 @@
 #include "solver.h"
 #include "indices.h"
 #include <math.h>
-
+#include "omp.h"
 
 //#define IX(i, j) ((j) + (n + 2) * (i))
 #define IX(x,y) (rb_idx((x),(y),(n+2)))
@@ -57,15 +57,15 @@ static void update_block(grid_color color,
                               float * restrict same,				// la grilla actual actualizada
                               unsigned int ib,							// block index
                               unsigned int jb,							// block index
-                              unsigned int sb								// block size
+                              unsigned int Sb								// block size
                               )
 {
     int shift = color == RED ? 1 : -1;
     unsigned int start = color == RED ? 0 : 1;
     unsigned int width = (n + 2) / 2;
 
-		for (unsigned int  y = 1+ib; y <= sb+ib; ++y, shift = -shift, start = 1 - start) {
-			  for (unsigned int x = (start+jb); x <= (sb+jb) - (1 - start); ++x) {
+		for (unsigned int  y = 1+ib; y <= Sb+ib; ++y, shift = -shift, start = 1 - start) {
+			  for (unsigned int x = (start+jb); x <= (Sb+jb) - (1 - start); ++x) {
 			      int index = idx(x, y, width);
 			      same[index] = (same0[index] + a * (neigh[index - width] +
 			                                         neigh[index] +
@@ -83,22 +83,22 @@ static void lin_solve_rb_step(grid_color color,
                               float uoc,
                               const float * restrict same0,	// la grilla actual sin actualizar
                               const float * restrict neigh,	// la grilla de los vecinos
-                              float * restrict same,		// la grilla actual actualizada
-                              int sb)
+                              float * restrict same)		// la grilla actual actualizada
 {
-    int ib, jb;
-    #pragma omp parallel for shared(same,same0,neigh,sb,n,a,uoc,color,sb) private(ib,jb) default(none) 		
-    for (ib = 0; ib < n; ib += sb) { 
-        for (jb = 0; jb < n/2; jb += sb) { 
-            update_block(color, n, a, uoc, same0, neigh, same,ib,jb,sb);
-        }
-    }
+		int Sb=n/omp_get_max_threads(); //block size.
+		int ib, jb;
+		#pragma omp parallel for collapse(2) shared(same,same0,neigh,Sb,n,a,uoc,color) private(ib,jb) default(none) 		
+		for (ib = 0; ib < n; ib += Sb) { 
+			for (jb = 0; jb < n/2; jb += Sb) { 
+				update_block(color, n, a, uoc, same0, neigh, same,ib,jb,Sb);
+			}
+		}
 }
 
 static void lin_solve(unsigned int n, boundary b,
                       float * restrict x,
                       const float * restrict x0,
-                      float a, float uoc, int sb)
+                      float a, float uoc)
 {
     unsigned int color_size = (n + 2) * ((n + 2) / 2);
     const float * red0 = x0;
@@ -107,8 +107,8 @@ static void lin_solve(unsigned int n, boundary b,
     float * blk = x + color_size;
 
     for (unsigned int k = 0; k < 20; ++k) {
-        lin_solve_rb_step(RED,   n, a, uoc, red0, blk, red, sb);
-        lin_solve_rb_step(BLACK, n, a, uoc, blk0, red, blk, sb);
+        lin_solve_rb_step(RED,   n, a, uoc, red0, blk, red);
+        lin_solve_rb_step(BLACK, n, a, uoc, blk0, red, blk);
         set_bnd(n, b, x);
     }
 }
@@ -155,7 +155,7 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
     set_bnd(n, b, d);
 }
 
-static void project(unsigned int n, float* u, float* v, float* p, float* div, int sb)
+static void project(unsigned int n, float* u, float* v, float* p, float* div)
 {
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
@@ -166,14 +166,15 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div, in
     set_bnd(n, NONE, div);
     set_bnd(n, NONE, p);
 	
-    lin_solve(n, NONE, p, div, 1, 0.25f, sb);
+/*    printf("project");*/
+    lin_solve(n, NONE, p, div, 1, 0.25f);
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
             u[IX(i, j)] -= 0.5f * n * (p[IX(i + 1, j)] - p[IX(i - 1, j)]);
             v[IX(i, j)] -= 0.5f * n * (p[IX(i, j + 1)] - p[IX(i, j - 1)]);
         }
     }
-    set_bnd(n, VERTICAL, u);
+    set_bnd(n, VERTICAL, u);     //Pone las condiciones de contorno de fluido viscoso.
     set_bnd(n, HORIZONTAL, v);   
 }
 
@@ -186,7 +187,7 @@ void dens_step(unsigned int n, float* x, float* x0, float* u, float* v, float di
     advect(n, NONE, x, x0, u, v, dt);
 }
 
-void vel_step(unsigned int n, float* u, float* v, float* u0, float* v0, float visc, float dt, int sb)
+void vel_step(unsigned int n, float* u, float* v, float* u0, float* v0, float visc, float dt)
 {
     add_source(n, u, u0, dt);
     add_source(n, v, v0, dt);
@@ -194,10 +195,10 @@ void vel_step(unsigned int n, float* u, float* v, float* u0, float* v0, float vi
     diffuse(n, VERTICAL, u, u0, visc, dt);
     SWAP(v0, v);
     diffuse(n, HORIZONTAL, v, v0, visc, dt);
-    project(n, u, v, u0, v0, sb);
+    project(n, u, v, u0, v0);
     SWAP(u0, u);
     SWAP(v0, v);
     advect(n, VERTICAL, u, u0, u0, v0, dt);
     advect(n, HORIZONTAL, v, v0, u0, v0, dt);
-    project(n, u, v, u0, v0, sb);
+    project(n, u, v, u0, v0);
 }
