@@ -195,6 +195,7 @@ int main(int argc, char** argv)
         fprintf(stderr, "\t visc   : viscosity of the fluid\n");
         fprintf(stderr, "\t force  : scales the mouse movement that generate a force\n");
         fprintf(stderr, "\t source : amount of density that will be deposited\n");
+        fprintf(stderr, "\t sb : the size for the grid to be divided. Mus be a divisor of N.\n");
         exit(1);
     }
 
@@ -214,6 +215,7 @@ int main(int argc, char** argv)
         visc = atof(argv[4]);
         force = atof(argv[5]);
         source = atof(argv[6]);
+        sb = atof(argv[7]);
     }
 
     if (!allocate_data()) {
