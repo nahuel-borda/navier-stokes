@@ -1,4 +1,4 @@
-name: Collect Performance Metrics Scaling
+name: Collect Performance Metrics Scaling OMP
 
 on:
   workflow_dispatch:
@@ -85,7 +85,7 @@ jobs:
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"
 
-collect_metrics_scaling_lab3_atom_omp_3:
+  collect_metrics_scaling_lab3_atom_omp_3:
     runs-on: ubuntu-latest
 
     strategy:
@@ -124,7 +124,7 @@ collect_metrics_scaling_lab3_atom_omp_3:
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"
 
-collect_metrics_scaling_lab3_atom_omp_4:
+  collect_metrics_scaling_lab3_atom_omp_4:
     runs-on: ubuntu-latest
 
     strategy:
