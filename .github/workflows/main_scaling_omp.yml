@@ -45,3 +45,245 @@ jobs:
         ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"' > output_amd_${grid_size}_${sub_grid_size}_${cores}.txt
         rm ssh_key
         python write_to_sheet.py output_amd_${grid_size}_${sub_grid_size}_${cores}.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"
+name: Collect Performance Metrics Scaling
+
+on:
+  workflow_dispatch:
+
+env:
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+jobs:
+  collect_metrics_scaling_lab3_atom_omp:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        grid_size: [2048]
+        sub_grid_size: [2]
+        cores: [1, 2, 4, 8, 16]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install gspread
+      run: pip install gspread oauth2client datetime pytz
+
+    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+        grid_size: ${{ matrix.grid_size }}
+        sub_grid_size: ${{ matrix.sub_grid_size }}
+        cores: ${{ matrix.cores }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"
+
+  collect_metrics_scaling_lab3_atom_omp_2:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        grid_size: [4096]
+        sub_grid_size: [2]
+        cores: [1, 2, 4, 8, 16]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install gspread
+      run: pip install gspread oauth2client datetime pytz
+
+    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+        grid_size: ${{ matrix.grid_size }}
+        sub_grid_size: ${{ matrix.sub_grid_size }}
+        cores: ${{ matrix.cores }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"
+
+collect_metrics_scaling_lab3_atom_omp_3:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        grid_size: [8192]
+        sub_grid_size: [2]
+        cores: [1, 2, 4, 8, 16]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install gspread
+      run: pip install gspread oauth2client datetime pytz
+
+    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+        grid_size: ${{ matrix.grid_size }}
+        sub_grid_size: ${{ matrix.sub_grid_size }}
+        cores: ${{ matrix.cores }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"
+
+collect_metrics_scaling_lab3_atom_omp_4:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        grid_size: [2048]
+        sub_grid_size: [8]
+        cores: [1, 2, 4, 8, 16]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install gspread
+      run: pip install gspread oauth2client datetime pytz
+
+    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+        grid_size: ${{ matrix.grid_size }}
+        sub_grid_size: ${{ matrix.sub_grid_size }}
+        cores: ${{ matrix.cores }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"
+
+  collect_metrics_scaling_lab3_atom_omp_5:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        grid_size: [4096]
+        sub_grid_size: [8]
+        cores: [1, 2, 4, 8, 16]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install gspread
+      run: pip install gspread oauth2client datetime pytz
+
+    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+        grid_size: ${{ matrix.grid_size }}
+        sub_grid_size: ${{ matrix.sub_grid_size }}
+        cores: ${{ matrix.cores }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"
+
+  collect_metrics_scaling_lab3_atom_omp_6:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        grid_size: [8192]
+        sub_grid_size: [8]
+        cores: [1, 2, 4, 8, 16]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install gspread
+      run: pip install gspread oauth2client datetime pytz
+
+    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra"
+      env:
+        pkpass: ${{secrets.PKPASSWORD}}
+        grid_size: ${{ matrix.grid_size }}
+        sub_grid_size: ${{ matrix.sub_grid_size }}
+        cores: ${{ matrix.cores }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_key
+        chmod 400 ssh_key
+        mkdir -p ~/.ssh
+        touch ~/.ssh/known_hosts
+        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
+        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+        echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"' > output_amd.txt
+        rm ssh_key
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"
