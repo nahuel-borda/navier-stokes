@@ -5,7 +5,7 @@
 #include "solver.h"
 #include "indices.h"
 #include <math.h>
-#include "omp.h"
+
 
 //#define IX(i, j) ((j) + (n + 2) * (i))
 #define IX(x,y) (rb_idx((x),(y),(n+2)))
@@ -85,9 +85,9 @@ static void lin_solve_rb_step(grid_color color,
                               const float * restrict neigh,	// la grilla de los vecinos
                               float * restrict same)		// la grilla actual actualizada
 {
-		int Sb=n/omp_get_max_threads(); //block size.
+		int Sb=4; //block size.
 		int ib, jb;
-		#pragma omp parallel for collapse(2) shared(same,same0,neigh,Sb,n,a,uoc,color) private(ib,jb) default(none) 		
+		#pragma omp parallel for shared(same,same0,neigh,Sb,n,a,uoc,color) private(ib,jb) default(none) 		
 		for (ib = 0; ib < n; ib += Sb) { 
 			for (jb = 0; jb < n/2; jb += Sb) { 
 				update_block(color, n, a, uoc, same0, neigh, same,ib,jb,Sb);
@@ -127,7 +127,7 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
     float x, y, s0, t0, s1, t1;
 
     float dt0 = dt * n;
-    #pragma omp parallel for shared(u,v,d,d0)
+    //#pragma omp parallel for collapse(2) shared(d,d0,u,v)
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
             x = i - dt0 * u[IX(i, j)];	//de acá pareciera que u=v_x, y que v=v_y. Está mal el comentario de linea 113??
