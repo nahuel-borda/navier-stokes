@@ -57,15 +57,15 @@ static void update_block(grid_color color,
                               float * restrict same,				// la grilla actual actualizada
                               unsigned int ib,							// block index
                               unsigned int jb,							// block index
-                              unsigned int Sb								// block size
+                              unsigned int sb								// block size
                               )
 {
     int shift = color == RED ? 1 : -1;
     unsigned int start = color == RED ? 0 : 1;
     unsigned int width = (n + 2) / 2;
 
-		for (unsigned int  y = 1+ib; y <= Sb+ib; ++y, shift = -shift, start = 1 - start) {
-			  for (unsigned int x = (start+jb); x <= (Sb+jb) - (1 - start); ++x) {
+		for (unsigned int  y = 1+ib; y <= sb+ib; ++y, shift = -shift, start = 1 - start) {
+			  for (unsigned int x = (start+jb); x <= (sb+jb) - (1 - start); ++x) {
 			      int index = idx(x, y, width);
 			      same[index] = (same0[index] + a * (neigh[index - width] +
 			                                         neigh[index] +
@@ -177,7 +177,7 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div, in
     set_bnd(n, HORIZONTAL, v);   
 }
 
-void dens_step(unsigned int n, float* x, float* x0, float* u, float* v, float diff, float dt, int sb)
+void dens_step(unsigned int n, float* x, float* x0, float* u, float* v, float diff, float dt)
 {
     add_source(n, x, x0, dt);
     SWAP(x0, x);
