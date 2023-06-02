@@ -35,7 +35,7 @@ extern void vel_step(int N, float* u, float* v, float* u0, float* v0, float visc
 
 /* global variables */
 
-static int N;
+static int N, Sb;
 static float dt, diff, visc;
 static float force, source;
 
@@ -215,7 +215,7 @@ int main(int argc, char** argv)
         visc = atof(argv[4]);
         force = atof(argv[5]);
         source = atof(argv[6]);
-        sb = atof(argv[7]);
+        Sb = atof(argv[7]);
     }
 
     if (!allocate_data()) {

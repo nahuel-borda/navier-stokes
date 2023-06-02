@@ -127,6 +127,7 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
     float x, y, s0, t0, s1, t1;
 
     float dt0 = dt * n;
+    #pragma omp parallel for shared(u,v,d,d0)
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
             x = i - dt0 * u[IX(i, j)];	//de acá pareciera que u=v_x, y que v=v_y. Está mal el comentario de linea 113??
