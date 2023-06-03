@@ -83,9 +83,9 @@ static void lin_solve_rb_step(grid_color color,
                               float uoc,
                               const float * restrict same0,	// la grilla actual sin actualizar
                               const float * restrict neigh,	// la grilla de los vecinos
-                              float * restrict same)		// la grilla actual actualizada
+                              float * restrict same,		// la grilla actual actualizada
+                              int Sb) //block size.
 {
-		int Sb=4; //block size.
 		int ib, jb;
 		#pragma omp parallel for shared(same,same0,neigh,Sb,n,a,uoc,color) private(ib,jb) default(none) collapse(2)
 		for (ib = 0; ib < n; ib += Sb) {
@@ -99,7 +99,7 @@ static void lin_solve_rb_step(grid_color color,
 static void lin_solve(unsigned int n, boundary b,
                       float * restrict x,
                       const float * restrict x0,
-                      float a, float uoc)
+                      float a, float uoc, int Sb)
 {
     unsigned int color_size = (n + 2) * ((n + 2) / 2);
     const float * red0 = x0;
@@ -108,18 +108,18 @@ static void lin_solve(unsigned int n, boundary b,
     float * blk = x + color_size;
 
     for (unsigned int k = 0; k < 20; ++k) {
-        lin_solve_rb_step(RED,   n, a, uoc, red0, blk, red);
-        lin_solve_rb_step(BLACK, n, a, uoc, blk0, red, blk);
+        lin_solve_rb_step(RED,   n, a, uoc, red0, blk, red, Sb);
+        lin_solve_rb_step(BLACK, n, a, uoc, blk0, red, blk, Sb);
         set_bnd(n, b, x);
     }
 }
 
 
-static void diffuse(unsigned int n, boundary b, float* x, const float* x0, float diff, float dt)
+static void diffuse(unsigned int n, boundary b, float* x, const float* x0, float diff, float dt, int Sb)
 {
     float a = dt * diff * n * n;
     float uoc = 1.f/(1.f + 4.f * a);
-    lin_solve(n, b, x, x0, a,uoc);
+    lin_solve(n, b, x, x0, a,uoc, Sb);
 }
 
 static void advect(unsigned int n, boundary b, float* d, const float* d0, const float* u, const float* v, float dt)
@@ -157,7 +157,7 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
     set_bnd(n, b, d);
 }
 
-static void project(unsigned int n, float* u, float* v, float* p, float* div)
+static void project(unsigned int n, float* u, float* v, float* p, float* div, int Sb)
 {
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
@@ -169,7 +169,7 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div)
     set_bnd(n, NONE, p);
 	
 /*    printf("project");*/
-    lin_solve(n, NONE, p, div, 1, 0.25f);
+    lin_solve(n, NONE, p, div, 1, 0.25f, Sb);
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {
             u[IX(i, j)] -= 0.5f * n * (p[IX(i + 1, j)] - p[IX(i - 1, j)]);
@@ -180,27 +180,27 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div)
     set_bnd(n, HORIZONTAL, v);   
 }
 
-void dens_step(unsigned int n, float* x, float* x0, float* u, float* v, float diff, float dt)
+void dens_step(unsigned int n, float* x, float* x0, float* u, float* v, float diff, float dt, int Sb)
 {
     add_source(n, x, x0, dt);
     SWAP(x0, x);
-    diffuse(n, NONE, x, x0, diff, dt);
+    diffuse(n, NONE, x, x0, diff, dt, Sb);
     SWAP(x0, x);
     advect(n, NONE, x, x0, u, v, dt);
 }
 
-void vel_step(unsigned int n, float* u, float* v, float* u0, float* v0, float visc, float dt)
+void vel_step(unsigned int n, float* u, float* v, float* u0, float* v0, float visc, float dt, int Sb)
 {
     add_source(n, u, u0, dt);
     add_source(n, v, v0, dt);
     SWAP(u0, u);
-    diffuse(n, VERTICAL, u, u0, visc, dt);
+    diffuse(n, VERTICAL, u, u0, visc, dt, Sb);
     SWAP(v0, v);
-    diffuse(n, HORIZONTAL, v, v0, visc, dt);
-    project(n, u, v, u0, v0);
+    diffuse(n, HORIZONTAL, v, v0, visc, dt, Sb);
+    project(n, u, v, u0, v0, Sb);
     SWAP(u0, u);
     SWAP(v0, v);
     advect(n, VERTICAL, u, u0, u0, v0, dt);
     advect(n, HORIZONTAL, v, v0, u0, v0, dt);
-    project(n, u, v, u0, v0);
+    project(n, u, v, u0, v0, Sb);
 }

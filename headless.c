@@ -30,8 +30,8 @@
 
 /* external definitions (from solver.c) */
 
-extern void dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt);
-extern void vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt);
+extern void dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt, int Sb);
+extern void vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt, int Sb);
 
 /* global variables */
 
@@ -148,11 +148,11 @@ static void one_step(void)
     react_ns_p_cell += 1.0e9 * (wtime() - start_t) / (N * N);
 
     start_t = wtime();
-    vel_step(N, u, v, u_prev, v_prev, visc, dt);
+    vel_step(N, u, v, u_prev, v_prev, visc, dt,Sb);
     vel_ns_p_cell += 1.0e9 * (wtime() - start_t) / (N * N);
 
     start_t = wtime();
-    dens_step(N, dens, dens_prev, u, v, diff, dt);
+    dens_step(N, dens, dens_prev, u, v, diff, dt, Sb);
     dens_ns_p_cell += 1.0e9 * (wtime() - start_t) / (N * N);
 
     if (1.0 < wtime() - one_second) { /* at least 1s between stats */
@@ -186,7 +186,7 @@ int main(int argc, char** argv)
 {
     int i = 0;
 
-    if (argc != 1 && argc != 7) {
+    if (argc != 1 && argc != 8) {
         fprintf(stderr, "usage : %s N dt diff visc force source\n", argv[0]);
         fprintf(stderr, "where:\n");
         fprintf(stderr, "\t N      : grid resolution\n");
@@ -206,6 +206,7 @@ int main(int argc, char** argv)
         visc = 0.0f;
         force = 5.0f;
         source = 100.0f;
+        Sb=N;
         fprintf(stderr, "Using defaults : N=%d dt=%g diff=%g visc=%g force = %g source=%g\n",
                 N, dt, diff, visc, force, source);
     } else {
