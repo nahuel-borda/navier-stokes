@@ -295,8 +295,6 @@ jobs:
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "8192" "8" "4"
 
-
-
     - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 2048 2 4"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
