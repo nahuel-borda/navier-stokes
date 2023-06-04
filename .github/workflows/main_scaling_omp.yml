@@ -38,7 +38,7 @@ jobs:
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "2048" "8" "2"
 
   collect_metrics_scaling_lab3_atom_omp12:
-    needs: collect_metrics_scaling_lab3_atom_omp11
+    needs: collect_metrics_scaling_lab3_atom_omp9
     runs-on: ubuntu-latest
 
     steps:
@@ -69,7 +69,7 @@ jobs:
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "2048" "2" "4"
 
   collect_metrics_scaling_lab3_atom_omp15:
-    needs: collect_metrics_scaling_lab3_atom_omp14
+    needs: collect_metrics_scaling_lab3_atom_omp12
     runs-on: ubuntu-latest
 
     steps:
@@ -100,7 +100,7 @@ jobs:
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "2048" "8" "4"
 
   collect_metrics_scaling_lab3_atom_omp18:
-    needs: collect_metrics_scaling_lab3_atom_omp17
+    needs: collect_metrics_scaling_lab3_atom_omp15
     runs-on: ubuntu-latest
 
     steps:
@@ -131,7 +131,7 @@ jobs:
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "2048" "2" "8"
 
   collect_metrics_scaling_lab3_atom_omp21:
-    needs: collect_metrics_scaling_lab3_atom_omp20
+    needs: collect_metrics_scaling_lab3_atom_omp18
     runs-on: ubuntu-latest
 
     steps:
