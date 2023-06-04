@@ -7,7 +7,7 @@ env:
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
 jobs:
-  collect_metrics_scaling_lab3_atom_omp2:
+  collect_metrics_scaling_lab3_atom_omp3:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,36 +36,6 @@ jobs:
         ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "8192" "2" "1"' > output_amd.txt
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "8192" "2" "1"
-
-  collect_metrics_scaling_lab3_atom_omp3:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.x
-
-    - name: Install gspread
-      run: pip install gspread oauth2client datetime pytz
-
-    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 2048 2 1"
-      env:
-        pkpass: ${{secrets.PKPASSWORD}}
-      run: |
-        echo "$SSH_PRIVATE_KEY" > ssh_key
-        chmod 400 ssh_key
-        mkdir -p ~/.ssh
-        touch ~/.ssh/known_hosts
-        ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
-        echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
-        echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "2048" "8" "1"' > output_amd.txt
-        rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "2048" "8" "1"
 
   collect_metrics_scaling_lab3_atom_omp4:
     needs: collect_metrics_scaling_lab3_atom_omp3
