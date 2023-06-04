@@ -225,7 +225,7 @@ int main(int argc, char** argv)
     clear_data();
     
 
-	fptr=fopen(strcat(argv[0],".dat"),"a");	//Abro un archivo de datos
+	fptr=fopen(strcat(strcat(strcat(argv[0], argv[1]), argv[7]),".dat"),"a");	//Abro un archivo de datos
 /*    fprintf(fptr,"ns per cell total, react, vel_step, dens_step\n");*/
     for (i = 0; i < 2048; i++) {
         one_step();

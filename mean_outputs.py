@@ -1,6 +1,11 @@
 import sys
 
-with open('headless.dat', 'r') as f:
+if sys.argv[2]:
+    filename = f'headless{sys.argv[2]}{sys.argv[3]}.dat'
+else:
+     filename = 'headless.dat'
+     
+with open(filename, 'r') as f:
     num_lines = 0
     sum_ns_total = 0
     sum_react = 0
