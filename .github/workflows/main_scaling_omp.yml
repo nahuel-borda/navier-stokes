@@ -14,7 +14,7 @@ jobs:
       matrix:
         grid_size: [2048]
         sub_grid_size: [2]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
@@ -54,7 +54,7 @@ jobs:
       matrix:
         grid_size: [4096]
         sub_grid_size: [2]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
@@ -94,7 +94,7 @@ jobs:
       matrix:
         grid_size: [8192]
         sub_grid_size: [2]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
@@ -133,7 +133,7 @@ jobs:
       matrix:
         grid_size: [2048]
         sub_grid_size: [8]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
@@ -173,7 +173,7 @@ jobs:
       matrix:
         grid_size: [4096]
         sub_grid_size: [8]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
@@ -213,7 +213,7 @@ jobs:
       matrix:
         grid_size: [8192]
         sub_grid_size: [8]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
