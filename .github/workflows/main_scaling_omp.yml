@@ -14,7 +14,7 @@ jobs:
       matrix:
         grid_size: [2048]
         sub_grid_size: [2]
-        cores: [1, 2, 4, 8]
+        cores: [1]
 
     steps:
     - name: Checkout repository
@@ -42,6 +42,6 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" ${grid_size} ${sub_grid_size} ${cores}' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" ${grid_size} ${sub_grid_size} ${cores}; python python3 mean_outputs.py output.txt "headless${grid_size}${sub_grid_size}${cores}.dat"; cat output.txt' > output_amd.txt
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"
