@@ -14,7 +14,7 @@ jobs:
       matrix:
         grid_size: [2048]
         sub_grid_size: [2]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
@@ -54,7 +54,7 @@ jobs:
       matrix:
         grid_size: [4096]
         sub_grid_size: [2]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
@@ -94,7 +94,7 @@ jobs:
       matrix:
         grid_size: [8192]
         sub_grid_size: [2]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
@@ -133,7 +133,7 @@ jobs:
       matrix:
         grid_size: [2048]
         sub_grid_size: [8]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
@@ -165,6 +165,7 @@ jobs:
         rm ssh_key
         python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "${grid_size}" "${sub_grid_size}" "${cores}"
     needs: collect_metrics_scaling_lab3_atom_omp_3
+    
   collect_metrics_scaling_lab3_atom_omp_5:
     runs-on: ubuntu-latest
 
@@ -172,7 +173,7 @@ jobs:
       matrix:
         grid_size: [4096]
         sub_grid_size: [8]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
@@ -212,7 +213,7 @@ jobs:
       matrix:
         grid_size: [8192]
         sub_grid_size: [8]
-        cores: [1, 2, 4, 8, 16]
+        cores: [1, 2, 4, 8]
 
     steps:
     - name: Checkout repository
