@@ -6,7 +6,8 @@ export CFLAGS=$2
 
 make clean >/dev/null 2>&1
 
-rm -f ./headless.dat 
+rm -f headless.dat 
+touch headless.dat
 rm -f vect_output.txt
 rm -f output.txt
 rm -f out.txt
@@ -31,12 +32,13 @@ else
   grep -c "missed" vectorization_report.txt | xargs -I {} echo "{};;missed_vectorizations;" >> vect_output.txt
 fi
 
+export OMP_NUM_THREADS=$5
 
 if [ $# == 2 ]; then
 	perf stat -r 1 -x ';' -o output.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time,cache-misses ./headless >/dev/null 2>&1
 	python3 mean_outputs.py output.txt
-elif [ $# == 3 ]; then
-	perf stat -r 1 -x ';' -o output.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time,cache-misses OMP_NUM_THREADS=$5 ./headless $3 0.1 0 0 5 100 $4 >/dev/null 2>&1
+else
+	perf stat -r 1 -x ';' -o output.txt -e cpu-clock,task-clock,context-switches,page-faults,cycles,instructions,branches,faults,migrations,duration_time,cache-misses ./headless $3 0.1 0 0 5 100 $4 >/dev/null 2>&1  
 	python3 mean_outputs.py output.txt
 fi
 
