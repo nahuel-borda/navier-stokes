@@ -225,9 +225,7 @@ int main(int argc, char** argv)
     clear_data();
     #include <stdlib.h>
     //char* filename = getenv("filename_headless");
-    char* filename = "headless.dat";
-    
-	fptr=fopen(filename,"a");	//Abro un archivo de datos
+	fptr=fopen("headless.dat","a");	//Abro un archivo de datos
 /*    fprintf(fptr,"ns per cell total, react, vel_step, dens_step\n");*/
     for (i = 0; i < 2048; i++) {
         one_step();
