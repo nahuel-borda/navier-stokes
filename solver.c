@@ -127,10 +127,13 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
     int i0, i1, j0, j1;
     float x, y, s0, t0, s1, t1;
 
+	unsigned int i,j;
+
     float dt0 = dt * n;
-    //#pragma omp parallel for collapse(2) shared(d,d0,u,v)
-    for (unsigned int i = 1; i <= n; i++) {
-        for (unsigned int j = 1; j <= n; j++) {
+    #pragma omp parallel for collapse(2) shared(d,d0,u,v,dt0,n,b) private(x, y, s0, t0, s1, t1,i0, i1, j0, j1,i,j) default(none)
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+        
             x = i - dt0 * u[IX(i, j)];	//de acá pareciera que u=v_x, y que v=v_y. Está mal el comentario de linea 113??
             y = j - dt0 * v[IX(i, j)];
             if (x < 0.5f) {
@@ -159,8 +162,10 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
 
 static void project(unsigned int n, float* u, float* v, float* p, float* div, int Sb)
 {
-    for (unsigned int i = 1; i <= n; i++) {
-        for (unsigned int j = 1; j <= n; j++) {
+	unsigned int i,j;
+	#pragma omp parallel for collapse(2) default(none) shared(n,u,v,p,div) private(i,j)
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
             div[IX(i, j)] = -0.5f * (u[IX(i + 1, j)] - u[IX(i - 1, j)] + v[IX(i, j + 1)] - v[IX(i, j - 1)]) / n;
             p[IX(i, j)] = 0;
         }
@@ -170,8 +175,9 @@ static void project(unsigned int n, float* u, float* v, float* p, float* div, in
 	
 /*    printf("project");*/
     lin_solve(n, NONE, p, div, 1, 0.25f, Sb);
-    for (unsigned int i = 1; i <= n; i++) {
-        for (unsigned int j = 1; j <= n; j++) {
+    #pragma omp parallel for collapse(2) default(none) shared(n,u,v,p,div) private(i,j)
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
             u[IX(i, j)] -= 0.5f * n * (p[IX(i + 1, j)] - p[IX(i - 1, j)]);
             v[IX(i, j)] -= 0.5f * n * (p[IX(i, j + 1)] - p[IX(i, j - 1)]);
         }
