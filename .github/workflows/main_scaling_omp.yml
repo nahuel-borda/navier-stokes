@@ -1,10 +1,20 @@
 name: Collect Performance Metrics Scaling OMP
+
 on:
   workflow_dispatch:
+
 env:
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
 jobs:
-  job1:
+  job-template:
+    strategy:
+      max-parallel: 1
+      matrix:
+        size: [128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768]
+        sb: [2, 4, 32, 64]
+        cores: [1, 2, 4, 8, 16, 32]
+
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -20,7 +30,7 @@ jobs:
     - name: Install gspread
       run: pip install gspread oauth2client datetime pytz
 
-    - name: "amd clang -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 128 2 1"
+    - name: "amd clang -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra {$size} {$sb} {$cores}"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -31,6 +41,6 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh clang "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "128" "2" "1"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh clang "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" {$size} {$sb} {$cores}' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "128" "2" "1"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" {$size} {$sb} {$cores}
