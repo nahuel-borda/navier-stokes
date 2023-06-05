@@ -22,7 +22,7 @@ jobs:
     - name: Install gspread
       run: pip install gspread oauth2client datetime pytz
 
-    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 512 2 2"
+    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 1024 2 2"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -33,9 +33,9 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "512" "8" "2"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "1024" "8" "2"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "512" "8" "2"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "1024" "8" "2"
 
   collect_metrics_scaling_lab3_atom_omp12:
     needs: collect_metrics_scaling_lab3_atom_omp9
@@ -53,7 +53,7 @@ jobs:
     - name: Install gspread
       run: pip install gspread oauth2client datetime pytz
 
-    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 512 2 4"
+    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 1024 2 4"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -64,9 +64,9 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "512" "2" "4"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "1024" "2" "4"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "512" "2" "4"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "1024" "2" "4"
 
   collect_metrics_scaling_lab3_atom_omp15:
     needs: collect_metrics_scaling_lab3_atom_omp12
@@ -84,7 +84,7 @@ jobs:
     - name: Install gspread
       run: pip install gspread oauth2client datetime pytz
 
-    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 512 8 4"
+    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 1024 8 4"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -95,9 +95,9 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "512" "8" "4"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "1024" "8" "4"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "512" "8" "4"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "1024" "8" "4"
 
   collect_metrics_scaling_lab3_atom_omp18:
     needs: collect_metrics_scaling_lab3_atom_omp15
@@ -115,7 +115,7 @@ jobs:
     - name: Install gspread
       run: pip install gspread oauth2client datetime pytz
 
-    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 512 2 8"
+    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 1024 2 8"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -126,9 +126,9 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "512" "2" "8"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "1024" "2" "8"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "512" "2" "8"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "1024" "2" "8"
 
   collect_metrics_scaling_lab3_atom_omp21:
     needs: collect_metrics_scaling_lab3_atom_omp18
@@ -146,7 +146,7 @@ jobs:
     - name: Install gspread
       run: pip install gspread oauth2client datetime pytz
 
-    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 512 8 8"
+    - name: "amd gcc -fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra 1024 8 8"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
       run: |
@@ -157,6 +157,6 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "512" "8" "8"' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh gcc "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "1024" "8" "8"' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "512" "8" "8"
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "gcc" "-fopenmp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" "1024" "8" "8"
