@@ -50,27 +50,7 @@ static int omx, omy, mx, my;
 */
 
 
-static void free_data(void)
-{
-    if (u) {
-        free(u);
-    }
-    if (v) {
-        free(v);
-    }
-    if (u_prev) {
-        free(u_prev);
-    }
-    if (v_prev) {
-        free(v_prev);
-    }
-    if (dens) {
-        free(dens);
-    }
-    if (dens_prev) {
-        free(dens_prev);
-    }
-}
+
 
 static void clear_data(void)
 {
@@ -247,26 +227,6 @@ static void react(float* d, float* u, float* v)
   ----------------------------------------------------------------------
 */
 
-static void key_func(unsigned char key, int x, int y)
-{
-    switch (key) {
-    case 'c':
-    case 'C':
-        clear_data();
-        break;
-
-    case 'q':
-    case 'Q':
-        free_data();
-        exit(0);
-        break;
-
-    case 'v':
-    case 'V':
-        dvel = !dvel;
-        break;
-    }
-}
 
 static void mouse_func(int button, int state, int x, int y)
 {
@@ -365,7 +325,7 @@ static void open_glut_window(void)
 
     pre_display();
 
-    glutKeyboardFunc(key_func);
+    
     glutMouseFunc(mouse_func);
     glutMotionFunc(motion_func);
     glutReshapeFunc(reshape_func);

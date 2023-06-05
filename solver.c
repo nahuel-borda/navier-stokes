@@ -86,7 +86,7 @@ static void lin_solve_rb_step(grid_color color,
                               float * restrict same,		// la grilla actual actualizada
                               int Sb) //block size.
 {
-		int ib, jb;
+		unsigned int ib, jb;
 		#pragma omp parallel for shared(same,same0,neigh,Sb,n,a,uoc,color) private(ib,jb) default(none) collapse(2)
 		for (ib = 0; ib < n; ib += Sb) {
 			//#pragma omp parallel for shared(same,same0,neigh,Sb,n,a,uoc,ib,color) private(jb) default(none)	

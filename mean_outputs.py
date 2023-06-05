@@ -1,12 +1,6 @@
 import sys
 
-if sys.argv[2]:
-    filename = sys.argv[2]
-else:
-    filename = 'headless.dat'
-
-
-with open(filename, 'r') as f:
+with open("headless.dat", 'r') as f:
     num_lines = 0
     sum_ns_total = 0
     sum_react = 0
