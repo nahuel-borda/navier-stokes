@@ -33,9 +33,6 @@ jobs:
     - name: "amd clang -fopenmp=libomp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra"
       env:
         pkpass: ${{secrets.PKPASSWORD}}
-        size: ${{ matrix.size }}
-        sb: ${{ matrix.sb }}
-        cores: ${{ matrix.cores }}
       run: |
         echo "$SSH_PRIVATE_KEY" > ssh_key
         chmod 400 ssh_key
@@ -44,6 +41,6 @@ jobs:
         ssh-keyscan -H atom.famaf.unc.edu.ar >> ~/.ssh/known_hosts
         echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
         echo 'ServerAliveCountMax 6000' | tee -a ~/.ssh/config
-        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh clang "-fopenmp=libomp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" {$size} {$sb} {$cores}' > output_amd.txt
+        ssh -i ssh_key cp202303@atom.famaf.unc.edu.ar 'cd /users/cp2023/cp202303/navier-stokes/; bash run_omp.sh clang "-fopenmp=libomp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" ${{ matrix.size }} ${{ matrix.sb }} ${{ matrix.cores }}' > output_amd.txt
         rm ssh_key
-        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-fopenmp=libomp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" {$size} {$sb} {$cores}
+        python write_to_sheet.py output_amd.txt $pkpass $GITHUB_SHA "n/d" "amd" "clang" "-fopenmp=libomp -std=c99 -march=native -Ofast -ftree-vectorize -Wall -Wextra" ${{ matrix.size }} ${{ matrix.sb }} ${{ matrix.cores }}
