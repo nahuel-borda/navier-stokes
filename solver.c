@@ -48,34 +48,6 @@ static void set_bnd(unsigned int n, boundary b, float* x)
 
 //                              
 
-static void update_block(grid_color color,				
-                              unsigned int n,								// grid size
-                              float a,
-                              float uoc,
-                              const float * restrict same0,	// la grilla actual sin actualizar
-                              const float * restrict neigh,	// la grilla de los vecinos
-                              float * restrict same,				// la grilla actual actualizada
-                              unsigned int ib,							// block index
-                              unsigned int jb,							// block index
-                              unsigned int Sb								// block size
-                              )
-{
-    int shift = color == RED ? 1 : -1;
-    unsigned int start = color == RED ? 0 : 1;
-    unsigned int width = (n + 2) / 2;
-
-		for (unsigned int  y = 1+ib; y <= Sb+ib; ++y, shift = -shift, start = 1 - start) {
-			  for (unsigned int x = (start+jb); x <= (Sb+jb) - (1 - start); ++x) {
-			      int index = idx(x, y, width);
-			      same[index] = (same0[index] + a * (neigh[index - width] +
-			                                         neigh[index] +
-			                                         neigh[index + shift] +
-			                                         neigh[index + width])) * uoc;
-			  }
-		}
-
-
-}
 
 static void lin_solve_rb_step(grid_color color,				
                               unsigned int n,
@@ -84,18 +56,30 @@ static void lin_solve_rb_step(grid_color color,
                               const float * restrict same0,	// la grilla actual sin actualizar
                               const float * restrict neigh,	// la grilla de los vecinos
                               float * restrict same,		// la grilla actual actualizada
-                              int Sb) //block size.
+                              int Sb)						// Sb no hace nada, solo esta por compatibilidad
 {
-		int ib, jb;
-		#pragma omp parallel for shared(same,same0,neigh,Sb,n,a,uoc,color) private(ib,jb) default(none) collapse(2)
-		for (ib = 0; ib < n; ib += Sb) {
-			//#pragma omp parallel for shared(same,same0,neigh,Sb,n,a,uoc,ib,color) private(jb) default(none)	
-			for (jb = 0; jb < n/2; jb += Sb) { 
-				update_block(color, n, a, uoc, same0, neigh, same,ib,jb,Sb);
-			}
-		}
-}
+    int shift = color == RED ? 1 : -1;			// variable = (condition) ? Expression2 : Expression3
+    unsigned int start = color == RED ? 0 : 1;
 
+    unsigned int width = (n + 2) / 2;
+
+	unsigned int x,y ;
+	int index;
+	
+    #pragma omp parallel for shared(width,same,same0,neigh,a,uoc,n) private(y,x,index) firstprivate(shift,start) default(none) 
+    for (y = 1; y <= n; ++y) {
+        for (x = start; x < width - (1 - start); ++x) {
+            index = idx(x, y, width);
+            same[index] = (same0[index] + a * (neigh[index - width] +
+                                               neigh[index] +
+                                               neigh[index + shift] +
+                                               neigh[index + width])) * uoc;
+        }
+        
+       	shift = -shift;
+		start = 1 - start;
+    }
+}
 static void lin_solve(unsigned int n, boundary b,
                       float * restrict x,
                       const float * restrict x0,
