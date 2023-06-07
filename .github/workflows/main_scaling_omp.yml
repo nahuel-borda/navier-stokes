@@ -11,9 +11,9 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        size: [128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768]
+        size: [4096, 8192, 16384, 32768]
         sb: [2, 4, 32, 64]
-        cores: [1, 2, 4, 8, 16, 32]
+        cores: [8, 16, 32]
 
     runs-on: ubuntu-latest
     continue-on-error: true
